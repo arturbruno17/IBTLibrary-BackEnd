@@ -1,0 +1,13 @@
+services:
+  db:
+    image: 'postgres:16.8-alpine3.20'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: ibtlibrary
+    volumes:
+      - type: bind
+        source: ./ddl.sql
+        target: /docker-entrypoint-initdb.d/ddl.sql
