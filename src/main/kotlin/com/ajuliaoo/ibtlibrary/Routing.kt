@@ -1,13 +1,19 @@
 package com.ajuliaoo.ibtlibrary
 
+import com.ajuliaoo.ibtlibrary.auth.authRouting
+import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
+import com.ajuliaoo.ibtlibrary.security.hashing.HashingService
 import io.ktor.server.application.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.configureRouting() {
+fun Application.configureRouting(
+    hashingService: HashingService,
+    peopleRepository: PeopleRepository,
+) {
     routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
+        authRouting(
+            hashingService = hashingService,
+            peopleRepository = peopleRepository
+        )
     }
 }

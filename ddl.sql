@@ -13,7 +13,8 @@ CREATE TABLE people(
     name TEXT NOT NULL,
     role ROLE NOT NULL DEFAULT 'READER',
     email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    salt TEXT NOT NULL,
+    hash_password TEXT NOT NULL
 );
 
 CREATE TABLE loan(
