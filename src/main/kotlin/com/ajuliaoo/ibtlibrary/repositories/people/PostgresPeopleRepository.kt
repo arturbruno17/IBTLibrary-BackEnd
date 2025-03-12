@@ -1,6 +1,8 @@
 package com.ajuliaoo.ibtlibrary.repositories.people
 
 import com.ajuliaoo.ibtlibrary.models.PeopleDAO
+import com.ajuliaoo.ibtlibrary.models.PeopleTable
+import com.ajuliaoo.ibtlibrary.models.Person
 import com.ajuliaoo.ibtlibrary.models.daoToModel
 import com.ajuliaoo.ibtlibrary.repositories.suspendTransaction
 
@@ -14,5 +16,11 @@ class PostgresPeopleRepository : PeopleRepository {
                 this.salt = salt
                 this.hashPassword = hashPassword
             }.daoToModel()
+        }
+
+    override suspend fun findByEmail(email: String): Person? =
+        suspendTransaction {
+            PeopleDAO.find { PeopleTable.email eq email }
+                .firstOrNull()?.daoToModel()
         }
 }

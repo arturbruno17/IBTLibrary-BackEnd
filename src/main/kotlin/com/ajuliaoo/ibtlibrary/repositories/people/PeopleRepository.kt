@@ -4,4 +4,5 @@ import com.ajuliaoo.ibtlibrary.models.Person
 
 interface PeopleRepository {
     suspend fun insert(name: String, email: String, salt: String, hashPassword: String): Person
+    suspend fun findByEmail(email: String): Person?
 }

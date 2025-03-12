@@ -28,6 +28,7 @@ class PeopleDAO(id: EntityID<Int>) : IntEntity(id) {
 }
 
 data class Person(
+    val id: Int,
     val name: String,
     val role: Role,
     val email: String,
@@ -37,6 +38,7 @@ data class Person(
 
 fun PeopleDAO.daoToModel(): Person {
     return Person(
+        id = this.id.value,
         name = this.name,
         role = this.role,
         email = this.email,
