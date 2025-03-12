@@ -1,4 +1,4 @@
-package com.ajuliaoo.ibtlibrary.auth.register.request
+package com.ajuliaoo.ibtlibrary.routing.auth.register.request
 
 import io.ktor.server.plugins.requestvalidation.*
 import kotlinx.serialization.Serializable

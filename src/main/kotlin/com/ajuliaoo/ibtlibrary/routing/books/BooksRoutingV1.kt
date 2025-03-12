@@ -1,7 +1,9 @@
-package com.ajuliaoo.ibtlibrary.books
+package com.ajuliaoo.ibtlibrary.routing.books
 
-import com.ajuliaoo.ibtlibrary.books.update.request.UpdateBookDto
+import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotLibrarianException
+import com.ajuliaoo.ibtlibrary.routing.books.update.request.UpdateBookDto
 import com.ajuliaoo.ibtlibrary.repositories.books.BooksRepository
+import com.ajuliaoo.ibtlibrary.routing.isUserLibrarian
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*

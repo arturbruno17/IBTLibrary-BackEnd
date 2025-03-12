@@ -1,4 +1,4 @@
-package com.ajuliaoo.ibtlibrary.books
+package com.ajuliaoo.ibtlibrary.routing
 
 import com.ajuliaoo.ibtlibrary.models.Role
 import io.ktor.server.auth.*
@@ -10,5 +10,3 @@ fun RoutingContext.isUserLibrarian(): Boolean {
     val role = principal!!["role"]!!
     return role == Role.LIBRARIAN.name
 }
-
-class UserIsNotLibrarianException(message: String = "Você não tem permissões de bibliotecário") : Exception(message)

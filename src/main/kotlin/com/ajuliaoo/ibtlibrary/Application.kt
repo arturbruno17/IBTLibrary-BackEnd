@@ -2,6 +2,7 @@ package com.ajuliaoo.ibtlibrary
 
 import com.ajuliaoo.ibtlibrary.repositories.books.PostgresBooksRepository
 import com.ajuliaoo.ibtlibrary.repositories.people.PostgresPeopleRepository
+import com.ajuliaoo.ibtlibrary.routing.configureRouting
 import com.ajuliaoo.ibtlibrary.security.hashing.SHA256HashingService
 import com.ajuliaoo.ibtlibrary.security.token.JwtTokenService
 import io.ktor.server.application.*

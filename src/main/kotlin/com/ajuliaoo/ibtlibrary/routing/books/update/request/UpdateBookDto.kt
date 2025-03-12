@@ -1,4 +1,4 @@
-package com.ajuliaoo.ibtlibrary.books.update.request
+package com.ajuliaoo.ibtlibrary.routing.books.update.request
 
 import io.ktor.server.plugins.requestvalidation.*
 import kotlinx.serialization.Serializable

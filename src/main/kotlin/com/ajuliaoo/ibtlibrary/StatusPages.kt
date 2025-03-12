@@ -1,6 +1,6 @@
 package com.ajuliaoo.ibtlibrary
 
-import com.ajuliaoo.ibtlibrary.books.UserIsNotLibrarianException
+import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotLibrarianException
 import io.ktor.server.application.*
 import io.ktor.http.*
 import io.ktor.server.plugins.requestvalidation.*

@@ -1,8 +1,8 @@
-package com.ajuliaoo.ibtlibrary.auth
+package com.ajuliaoo.ibtlibrary.routing.auth
 
-import com.ajuliaoo.ibtlibrary.auth.login.request.LoginDto
-import com.ajuliaoo.ibtlibrary.auth.login.response.LoginResponse
-import com.ajuliaoo.ibtlibrary.auth.register.request.RegisterDto
+import com.ajuliaoo.ibtlibrary.routing.auth.login.request.LoginDto
+import com.ajuliaoo.ibtlibrary.routing.auth.login.response.LoginResponse
+import com.ajuliaoo.ibtlibrary.routing.auth.register.request.RegisterDto
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
 import com.ajuliaoo.ibtlibrary.security.hashing.HashingService
 import com.ajuliaoo.ibtlibrary.security.hashing.SaltedHash

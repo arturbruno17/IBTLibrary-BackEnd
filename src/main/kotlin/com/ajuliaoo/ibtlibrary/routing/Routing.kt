@@ -1,7 +1,7 @@
-package com.ajuliaoo.ibtlibrary
+package com.ajuliaoo.ibtlibrary.routing
 
-import com.ajuliaoo.ibtlibrary.auth.authRouting
-import com.ajuliaoo.ibtlibrary.books.booksRouting
+import com.ajuliaoo.ibtlibrary.routing.auth.authRouting
+import com.ajuliaoo.ibtlibrary.routing.books.booksRouting
 import com.ajuliaoo.ibtlibrary.repositories.books.BooksRepository
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
 import com.ajuliaoo.ibtlibrary.security.hashing.HashingService
