@@ -89,3 +89,7 @@ private fun Route.loginRoute(
         call.respond(HttpStatusCode.OK, LoginResponse(accessToken, refreshToken))
     }
 }
+
+private fun Route.registerLibrarianRoute() {
+    TODO("Not implemented yet")
+}

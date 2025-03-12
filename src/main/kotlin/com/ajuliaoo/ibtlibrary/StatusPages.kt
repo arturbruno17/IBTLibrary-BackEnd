@@ -1,5 +1,6 @@
 package com.ajuliaoo.ibtlibrary
 
+import com.ajuliaoo.ibtlibrary.books.UserIsNotLibrarianException
 import io.ktor.server.application.*
 import io.ktor.http.*
 import io.ktor.server.plugins.requestvalidation.*
@@ -12,6 +13,13 @@ fun Application.configureStatusPages() {
             call.respond(
                 HttpStatusCode.BadRequest,
                 hashMapOf("reasons" to cause.reasons)
+            )
+        }
+
+        exception<UserIsNotLibrarianException> { call, cause ->
+            call.respond(
+                HttpStatusCode.Forbidden,
+                hashMapOf("message" to cause.message)
             )
         }
     }

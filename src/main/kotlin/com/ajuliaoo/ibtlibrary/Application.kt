@@ -1,5 +1,6 @@
 package com.ajuliaoo.ibtlibrary
 
+import com.ajuliaoo.ibtlibrary.repositories.books.PostgresBooksRepository
 import com.ajuliaoo.ibtlibrary.repositories.people.PostgresPeopleRepository
 import com.ajuliaoo.ibtlibrary.security.hashing.SHA256HashingService
 import com.ajuliaoo.ibtlibrary.security.token.JwtTokenService
@@ -12,16 +13,19 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
     val peopleRepository = PostgresPeopleRepository()
+    val booksRepository = PostgresBooksRepository()
     val hashingService = SHA256HashingService()
     val jwtTokenService = JwtTokenService()
 
     configureDatabase()
     configureSerialization()
+    configureAuthentication()
+    configureValidation()
+    configureStatusPages()
     configureRouting(
         peopleRepository = peopleRepository,
+        booksRepository = booksRepository,
         hashingService = hashingService,
         tokenService = jwtTokenService
     )
-    configureValidation()
-    configureStatusPages()
 }
