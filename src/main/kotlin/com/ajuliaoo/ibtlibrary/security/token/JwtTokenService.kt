@@ -14,9 +14,12 @@ class JwtTokenService: TokenService {
             accessToken = accessToken.withClaim(claim.name, claim.value)
         }
 
-        val refreshToken = JWT.create()
+        var refreshToken = JWT.create()
             .withSubject(config.subject)
             .withExpiresAt(Instant.ofEpochMilli(System.currentTimeMillis() + 1.days.inWholeMilliseconds))
+        claims.forEach {
+            refreshToken = refreshToken.withClaim(it.name, it.value)
+        }
         return Pair(
             first = accessToken.sign(Algorithm.HMAC256(config.secret)),
             second = refreshToken.sign(Algorithm.HMAC256(config.secret))

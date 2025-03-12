@@ -6,6 +6,7 @@ import com.ajuliaoo.ibtlibrary.auth.register.request.RegisterDto
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
 import com.ajuliaoo.ibtlibrary.security.hashing.HashingService
 import com.ajuliaoo.ibtlibrary.security.hashing.SaltedHash
+import com.ajuliaoo.ibtlibrary.security.token.TokenClaim
 import com.ajuliaoo.ibtlibrary.security.token.TokenConfig
 import com.ajuliaoo.ibtlibrary.security.token.TokenService
 import io.ktor.http.*
@@ -80,7 +81,11 @@ private fun Route.loginRoute(
             subject = person.id.toString()
         )
 
-        val (accessToken, refreshToken) = tokenService.generate(tokenConfig)
+        val (accessToken, refreshToken) = tokenService.generate(
+            config = tokenConfig,
+            TokenClaim("email", person.email),
+            TokenClaim("role", person.role.name)
+        )
         call.respond(HttpStatusCode.OK, LoginResponse(accessToken, refreshToken))
     }
 }
