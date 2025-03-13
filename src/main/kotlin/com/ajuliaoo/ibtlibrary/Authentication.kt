@@ -28,7 +28,7 @@ fun Application.configureAuthentication() {
             challenge { _, _ ->
                 call.respond(
                     HttpStatusCode.Forbidden,
-                    hashMapOf("message" to "Você não tem as permissões necessárias")
+                    ErrorResponse("Token inválido ou expirado")
                 )
             }
         }

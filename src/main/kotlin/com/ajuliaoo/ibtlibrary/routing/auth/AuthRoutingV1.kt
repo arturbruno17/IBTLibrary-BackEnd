@@ -1,5 +1,6 @@
 package com.ajuliaoo.ibtlibrary.routing.auth
 
+import com.ajuliaoo.ibtlibrary.ErrorResponse
 import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotAdminException
 import com.ajuliaoo.ibtlibrary.models.Role
 import com.ajuliaoo.ibtlibrary.routing.auth.login.request.LoginDto
@@ -47,7 +48,7 @@ private fun Route.registerRoute(
         } catch (ex: ExposedSQLException) {
             call.respond(
                 HttpStatusCode.PreconditionFailed,
-                hashMapOf("message" to "E-mail encontrado no nosso banco de dados")
+                ErrorResponse("E-mail encontrado no nosso banco de dados")
             )
         }
     }
@@ -65,7 +66,7 @@ private fun Route.loginRoute(
         if (person == null) {
             call.respond(
                 HttpStatusCode.PreconditionFailed,
-                hashMapOf("message" to "E-mail não encontrado no nosso banco de dados")
+                ErrorResponse("E-mail não encontrado no nosso banco de dados")
             )
             return@post
         }
@@ -74,7 +75,7 @@ private fun Route.loginRoute(
         if (!matchPassword) {
             call.respond(
                 HttpStatusCode.PreconditionFailed,
-                hashMapOf("message" to "Credenciais inválidas")
+                ErrorResponse("Credenciais inválidas")
             )
         }
 
@@ -113,7 +114,7 @@ private fun Route.registerLibrarianRoute(
         } catch (ex: ExposedSQLException) {
             call.respond(
                 HttpStatusCode.PreconditionFailed,
-                hashMapOf("message" to "E-mail encontrado no nosso banco de dados")
+                ErrorResponse("E-mail encontrado no nosso banco de dados")
             )
         }
     }

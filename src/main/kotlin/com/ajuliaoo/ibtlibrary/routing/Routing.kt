@@ -4,6 +4,7 @@ import com.ajuliaoo.ibtlibrary.routing.auth.authRouting
 import com.ajuliaoo.ibtlibrary.routing.books.booksRouting
 import com.ajuliaoo.ibtlibrary.repositories.books.BooksRepository
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
+import com.ajuliaoo.ibtlibrary.routing.people.peopleRouting
 import com.ajuliaoo.ibtlibrary.security.hashing.HashingService
 import com.ajuliaoo.ibtlibrary.security.token.JwtTokenService
 import io.ktor.server.application.*
@@ -22,5 +23,6 @@ fun Application.configureRouting(
             tokenService = tokenService
         )
         booksRouting(booksRepository = booksRepository)
+        peopleRouting(peopleRepository = peopleRepository)
     }
 }
