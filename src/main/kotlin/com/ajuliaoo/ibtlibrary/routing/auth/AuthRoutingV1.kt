@@ -14,6 +14,7 @@ import com.ajuliaoo.ibtlibrary.security.token.TokenClaim
 import com.ajuliaoo.ibtlibrary.security.token.TokenConfig
 import com.ajuliaoo.ibtlibrary.security.token.TokenService
 import io.ktor.http.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -27,7 +28,9 @@ fun Routing.authRouting(
     route("/api/v1/auth") {
         registerRoute(hashingService = hashingService, peopleRepository = peopleRepository)
         loginRoute(hashingService = hashingService, peopleRepository = peopleRepository, tokenService = tokenService)
-        registerLibrarianRoute(hashingService = hashingService, peopleRepository = peopleRepository)
+        authenticate {
+            registerLibrarianRoute(hashingService = hashingService, peopleRepository = peopleRepository)
+        }
     }
 }
 
@@ -42,7 +45,7 @@ private fun Route.registerRoute(
                 role = Role.READER,
                 registerDto = registerDto,
                 hashingService = hashingService,
-                peopleRepository =  peopleRepository
+                peopleRepository = peopleRepository
             )
             call.respond(HttpStatusCode.Created)
         } catch (ex: ExposedSQLException) {
@@ -108,7 +111,7 @@ private fun Route.registerLibrarianRoute(
                 role = Role.LIBRARIAN,
                 registerDto = registerDto,
                 hashingService = hashingService,
-                peopleRepository =  peopleRepository
+                peopleRepository = peopleRepository
             )
             call.respond(HttpStatusCode.Created)
         } catch (ex: ExposedSQLException) {
