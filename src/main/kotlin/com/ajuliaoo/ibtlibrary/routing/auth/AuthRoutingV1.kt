@@ -1,9 +1,12 @@
 package com.ajuliaoo.ibtlibrary.routing.auth
 
+import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotAdminException
+import com.ajuliaoo.ibtlibrary.models.Role
 import com.ajuliaoo.ibtlibrary.routing.auth.login.request.LoginDto
 import com.ajuliaoo.ibtlibrary.routing.auth.login.response.LoginResponse
 import com.ajuliaoo.ibtlibrary.routing.auth.register.request.RegisterDto
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
+import com.ajuliaoo.ibtlibrary.routing.isUserAdmin
 import com.ajuliaoo.ibtlibrary.security.hashing.HashingService
 import com.ajuliaoo.ibtlibrary.security.hashing.SaltedHash
 import com.ajuliaoo.ibtlibrary.security.token.TokenClaim
@@ -23,6 +26,7 @@ fun Routing.authRouting(
     route("/api/v1/auth") {
         registerRoute(hashingService = hashingService, peopleRepository = peopleRepository)
         loginRoute(hashingService = hashingService, peopleRepository = peopleRepository, tokenService = tokenService)
+        registerLibrarianRoute(hashingService = hashingService, peopleRepository = peopleRepository)
     }
 }
 
@@ -32,13 +36,12 @@ private fun Route.registerRoute(
 ) {
     post("/register") {
         val registerDto = call.receive<RegisterDto>()
-        val saltedHash = hashingService.generateSaltedHash(registerDto.password)
         try {
-            peopleRepository.insert(
-                name = registerDto.name,
-                email = registerDto.email,
-                salt = saltedHash.salt,
-                hashPassword = saltedHash.hash
+            registerUserAs(
+                role = Role.READER,
+                registerDto = registerDto,
+                hashingService = hashingService,
+                peopleRepository =  peopleRepository
             )
             call.respond(HttpStatusCode.Created)
         } catch (ex: ExposedSQLException) {
@@ -90,6 +93,44 @@ private fun Route.loginRoute(
     }
 }
 
-private fun Route.registerLibrarianRoute() {
-    TODO("Not implemented yet")
+private fun Route.registerLibrarianRoute(
+    hashingService: HashingService,
+    peopleRepository: PeopleRepository,
+) {
+    post("/register/librarian") {
+        if (!isUserAdmin()) throw UserIsNotAdminException()
+
+        val registerDto = call.receive<RegisterDto>()
+
+        try {
+            registerUserAs(
+                role = Role.LIBRARIAN,
+                registerDto = registerDto,
+                hashingService = hashingService,
+                peopleRepository =  peopleRepository
+            )
+            call.respond(HttpStatusCode.Created)
+        } catch (ex: ExposedSQLException) {
+            call.respond(
+                HttpStatusCode.PreconditionFailed,
+                hashMapOf("message" to "E-mail encontrado no nosso banco de dados")
+            )
+        }
+    }
+}
+
+private suspend fun registerUserAs(
+    role: Role,
+    registerDto: RegisterDto,
+    peopleRepository: PeopleRepository,
+    hashingService: HashingService
+) {
+    val saltedHash = hashingService.generateSaltedHash(registerDto.password)
+    peopleRepository.insert(
+        name = registerDto.name,
+        role = role,
+        email = registerDto.email,
+        salt = saltedHash.salt,
+        hashPassword = saltedHash.hash
+    )
 }

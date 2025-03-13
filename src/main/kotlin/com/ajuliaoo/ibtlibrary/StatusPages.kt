@@ -1,5 +1,6 @@
 package com.ajuliaoo.ibtlibrary
 
+import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotAdminException
 import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotLibrarianException
 import io.ktor.server.application.*
 import io.ktor.http.*
@@ -17,6 +18,13 @@ fun Application.configureStatusPages() {
         }
 
         exception<UserIsNotLibrarianException> { call, cause ->
+            call.respond(
+                HttpStatusCode.Forbidden,
+                hashMapOf("message" to cause.message)
+            )
+        }
+
+        exception<UserIsNotAdminException> { call, cause ->
             call.respond(
                 HttpStatusCode.Forbidden,
                 hashMapOf("message" to cause.message)

@@ -6,7 +6,7 @@ CREATE TABLE books(
     quantity INT NOT NULL DEFAULT 1
 );
 
-CREATE TYPE ROLE AS ENUM ('LIBRARIAN', 'READER');
+CREATE TYPE ROLE AS ENUM ('LIBRARIAN', 'READER', 'ADMIN');
 
 CREATE TABLE people(
     id SERIAL PRIMARY KEY NOT NULL,
@@ -25,3 +25,5 @@ CREATE TABLE loan(
     duration INT NOT NULL DEFAULT 15,
     return_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL
 );
+
+INSERT INTO people (name, role, email, salt, hash_password) VALUES ('Artur Bruno', 'ADMIN', 'arturjuliao20@gmail.com', '1aed60d25ff24788f5d05d5428b7bdb1aaf5a8570aa82126d05c9dd71b313b8e', '82739b76cb4b898faa695a9511f5688aa2ade4b434ef03a8701befb8b3589b67');

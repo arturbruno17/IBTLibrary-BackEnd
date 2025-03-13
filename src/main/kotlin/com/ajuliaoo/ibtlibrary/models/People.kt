@@ -6,7 +6,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 enum class Role {
-    LIBRARIAN, READER
+    READER, LIBRARIAN, ADMIN
 }
 
 object PeopleTable : IntIdTable("people") {

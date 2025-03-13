@@ -1,13 +1,10 @@
 package com.ajuliaoo.ibtlibrary.repositories.people
 
-import com.ajuliaoo.ibtlibrary.models.PeopleDAO
-import com.ajuliaoo.ibtlibrary.models.PeopleTable
-import com.ajuliaoo.ibtlibrary.models.Person
-import com.ajuliaoo.ibtlibrary.models.daoToModel
+import com.ajuliaoo.ibtlibrary.models.*
 import com.ajuliaoo.ibtlibrary.repositories.suspendTransaction
 
 class PostgresPeopleRepository : PeopleRepository {
-    override suspend fun insert(name: String, email: String, salt: String, hashPassword: String) =
+    override suspend fun insert(name: String, role: Role, email: String, salt: String, hashPassword: String) =
         suspendTransaction {
             PeopleDAO.new {
                 this.name = name
