@@ -6,7 +6,6 @@ import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotAdminException
 import com.ajuliaoo.ibtlibrary.models.Role
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
 import com.ajuliaoo.ibtlibrary.routing.isUserAdmin
-import com.ajuliaoo.ibtlibrary.routing.people.response.toDto
 import com.ajuliaoo.ibtlibrary.routing.people.update.request.UpdatePersonDto
 import io.ktor.http.*
 import io.ktor.server.auth.*
@@ -32,7 +31,7 @@ private fun Route.getAllPeopleRoute(
     peopleRepository: PeopleRepository
 ) {
     get {
-        val people = peopleRepository.getPeople().map { it.toDto() }
+        val people = peopleRepository.getPeople()
         call.respond(HttpStatusCode.OK, people)
     }
 }
@@ -42,7 +41,7 @@ private fun Route.getPersonByIdRoute(
 ) {
     get("/{id}") {
         val id = call.parameters["id"]!!.toInt()
-        val person = peopleRepository.getPersonById(id)?.toDto()
+        val person = peopleRepository.getPersonById(id)
         person
             ?.let { call.respond(HttpStatusCode.OK, it) }
             ?: call.respond(HttpStatusCode.NotFound)
@@ -94,7 +93,7 @@ private fun Route.turnPersonInDifferentRoleRoute(
         }
 
         val personId = call.parameters["id"]!!.toInt()
-        peopleRepository.updateRole(personId, chosenRole)?.toDto()
+        peopleRepository.updateRole(personId, chosenRole)
             ?.let { call.respond(HttpStatusCode.OK, it) }
             ?: call.respond(HttpStatusCode.NotFound)
     }

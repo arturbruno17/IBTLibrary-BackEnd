@@ -1,5 +1,7 @@
 package com.ajuliaoo.ibtlibrary.models
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -27,13 +29,14 @@ class PeopleDAO(id: EntityID<Int>) : IntEntity(id) {
     var hashPassword by PeopleTable.hashPassword
 }
 
+@Serializable
 data class Person(
     val id: Int,
     val name: String,
     val role: Role,
     val email: String,
-    val salt: String,
-    val hashPassword: String,
+    @Transient val salt: String = "",
+    @Transient val hashPassword: String = "",
 )
 
 fun PeopleDAO.daoToModel(): Person {
