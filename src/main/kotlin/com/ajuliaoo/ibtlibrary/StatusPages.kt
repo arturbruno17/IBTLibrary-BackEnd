@@ -1,9 +1,6 @@
 package com.ajuliaoo.ibtlibrary
 
-import com.ajuliaoo.ibtlibrary.exceptions.ContactAdministratorException
-import com.ajuliaoo.ibtlibrary.exceptions.InvalidRoleException
-import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotAdminException
-import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotLibrarianException
+import com.ajuliaoo.ibtlibrary.exceptions.*
 import io.ktor.server.application.*
 import io.ktor.http.*
 import io.ktor.server.plugins.requestvalidation.*
@@ -55,6 +52,13 @@ fun Application.configureStatusPages() {
         exception<ContactAdministratorException> { call, cause ->
             call.respond(
                 HttpStatusCode.Forbidden,
+                ErrorResponse(cause.message)
+            )
+        }
+
+        exception<BookNotFoundException> { call, cause ->
+            call.respond(
+                HttpStatusCode.NotFound,
                 ErrorResponse(cause.message)
             )
         }

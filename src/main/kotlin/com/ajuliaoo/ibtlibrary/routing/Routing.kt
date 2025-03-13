@@ -3,7 +3,9 @@ package com.ajuliaoo.ibtlibrary.routing
 import com.ajuliaoo.ibtlibrary.routing.auth.authRouting
 import com.ajuliaoo.ibtlibrary.routing.books.booksRouting
 import com.ajuliaoo.ibtlibrary.repositories.books.BooksRepository
+import com.ajuliaoo.ibtlibrary.repositories.loan.LoanRepository
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
+import com.ajuliaoo.ibtlibrary.routing.loan.loanRouting
 import com.ajuliaoo.ibtlibrary.routing.people.peopleRouting
 import com.ajuliaoo.ibtlibrary.security.hashing.HashingService
 import com.ajuliaoo.ibtlibrary.security.token.JwtTokenService
@@ -14,6 +16,7 @@ fun Application.configureRouting(
     hashingService: HashingService,
     peopleRepository: PeopleRepository,
     booksRepository: BooksRepository,
+    loanRepository: LoanRepository,
     tokenService: JwtTokenService
 ) {
     routing {
@@ -24,5 +27,6 @@ fun Application.configureRouting(
         )
         booksRouting(booksRepository = booksRepository)
         peopleRouting(peopleRepository = peopleRepository)
+        loanRouting(loanRepository = loanRepository)
     }
 }
