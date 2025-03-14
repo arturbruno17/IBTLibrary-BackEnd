@@ -186,44 +186,6 @@ paths:
                   description: ""
                   value:
                     message: "Token inválido ou expirado"
-  /api/v1/books/{id}:
-    get:
-      tags:
-        - Books
-      security:
-        - bearerAuth: [ ]
-      description: ""
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int32"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/Book"
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "401":
-          description: "Unauthorized"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Token inválido ou expirado"
     post:
       tags:
         - Books
@@ -286,6 +248,44 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Book"
+  /api/v1/books/{id}:
+    get:
+      tags:
+        - Books
+      security:
+        - bearerAuth: [ ]
+      description: ""
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Book"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Token inválido ou expirado"
     put:
       tags:
         - Books
