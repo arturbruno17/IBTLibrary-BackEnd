@@ -19,7 +19,7 @@ fun RequestValidationConfig.validateUpdatePersonDto() {
             Regex("^([a-zA-Z0-9_\\-.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})$")
 
         if (updatePersonDto.name.isBlank()) {
-            reasons.add("O nome não pode ser vaio")
+            reasons.add("O nome não pode ser vazio")
         }
 
         if (!emailRegex.matches(updatePersonDto.email)) {
@@ -27,7 +27,7 @@ fun RequestValidationConfig.validateUpdatePersonDto() {
         }
 
         if (updatePersonDto.role != null && updatePersonDto.role !in listOf(Role.READER, Role.LIBRARIAN)) {
-            reasons.add("Apenas cargos de leitor e bibliotecário são acietos. Entre em contato com o administrador do sistema")
+            reasons.add("Apenas cargos de leitor e bibliotecário são aceitos. Entre em contato com o administrador do sistema")
         }
 
         if (reasons.isEmpty()) {

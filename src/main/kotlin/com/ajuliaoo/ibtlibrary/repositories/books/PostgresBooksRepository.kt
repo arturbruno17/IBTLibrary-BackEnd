@@ -17,7 +17,7 @@ class PostgresBooksRepository : BooksRepository {
         BooksDAO.findById(id)?.daoToModel()
     }
 
-    override suspend fun insertBook(isbn: String, title: String, author: String, quantity: Int): Book = suspendTransaction {
+    override suspend fun insertBook(isbn: String, title: String, author: String?, quantity: Int): Book = suspendTransaction {
         BooksDAO.new {
             this.isbn = isbn
             this.title = title

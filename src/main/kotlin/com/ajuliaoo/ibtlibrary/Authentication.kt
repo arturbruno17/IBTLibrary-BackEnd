@@ -27,7 +27,7 @@ fun Application.configureAuthentication() {
 
             challenge { _, _ ->
                 call.respond(
-                    HttpStatusCode.Forbidden,
+                    HttpStatusCode.Unauthorized,
                     ErrorResponse("Token inválido ou expirado")
                 )
             }

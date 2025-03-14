@@ -35,6 +35,8 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml")
     implementation("io.ktor:ktor-server-auth")
     implementation("io.ktor:ktor-server-auth-jwt")
+    implementation("io.ktor:ktor-server-swagger")
+    implementation("io.ktor:ktor-server-host-common")
 
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
@@ -46,7 +48,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
     implementation("commons-codec:commons-codec:$commons_codec_version")
-    implementation("io.ktor:ktor-server-host-common:3.1.1")
 
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

@@ -10,6 +10,7 @@ import com.ajuliaoo.ibtlibrary.routing.people.peopleRouting
 import com.ajuliaoo.ibtlibrary.security.hashing.HashingService
 import com.ajuliaoo.ibtlibrary.security.token.JwtTokenService
 import io.ktor.server.application.*
+import io.ktor.server.plugins.swagger.*
 import io.ktor.server.routing.*
 
 fun Application.configureRouting(
@@ -28,5 +29,6 @@ fun Application.configureRouting(
         booksRouting(booksRepository = booksRepository)
         peopleRouting(peopleRepository = peopleRepository)
         loanRouting(loanRepository = loanRepository)
+        swaggerUI(path = "/swagger")
     }
 }

@@ -9,6 +9,7 @@ import com.ajuliaoo.ibtlibrary.routing.isUserAdmin
 import com.ajuliaoo.ibtlibrary.routing.people.update.request.UpdatePersonDto
 import io.ktor.http.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -51,11 +52,12 @@ private fun Route.getPersonByIdRoute(
 private fun Route.updatePersonByIdRoute(
     peopleRepository: PeopleRepository
 ) {
-    patch("/{id}") {
+    put("/{id}") {
         val id = call.parameters["id"]!!.toInt()
         val updateDto = call.receive<UpdatePersonDto>()
 
-        val requesterId = call.parameters["id"]!!.toInt()
+        val principal = call.principal<JWTPrincipal>()
+        val requesterId = principal!!.subject!!.toInt()
         if (requesterId == id) {
             peopleRepository.updatePerson(
                 id = id,
