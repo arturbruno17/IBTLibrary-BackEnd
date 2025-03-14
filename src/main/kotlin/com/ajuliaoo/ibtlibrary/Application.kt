@@ -6,6 +6,7 @@ import com.ajuliaoo.ibtlibrary.repositories.people.PostgresPeopleRepository
 import com.ajuliaoo.ibtlibrary.routing.configureRouting
 import com.ajuliaoo.ibtlibrary.security.hashing.SHA256HashingService
 import com.ajuliaoo.ibtlibrary.security.token.JwtTokenService
+import com.ajuliaoo.ibtlibrary.serialization.configureSerialization
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
 

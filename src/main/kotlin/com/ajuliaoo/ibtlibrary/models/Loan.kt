@@ -1,6 +1,8 @@
 package com.ajuliaoo.ibtlibrary.models
 
+import com.ajuliaoo.ibtlibrary.serialization.InstantSerializer
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -27,12 +29,17 @@ class LoanDAO(id: EntityID<Int>) : IntEntity(id) {
     var returnDate by LoanTable.returnDate
 }
 
+@Serializable
 data class Loan(
     val person: Person,
     val book: Book,
-    @SerialName("start_date") val startDate: Instant,
+    @SerialName("start_date")
+    @Serializable(with = InstantSerializer::class)
+    val startDate: Instant,
     val duration: Int,
-    @SerialName("return_date") val returnDate: Instant?,
+    @SerialName("return_date")
+    @Serializable(with = InstantSerializer::class)
+    val returnDate: Instant?,
 )
 
 fun LoanDAO.daoToModel(): Loan {

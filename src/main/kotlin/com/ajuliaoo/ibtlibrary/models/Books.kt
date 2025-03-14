@@ -1,5 +1,6 @@
 package com.ajuliaoo.ibtlibrary.models
 
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -21,6 +22,7 @@ class BooksDAO(id: EntityID<Int>) : IntEntity(id) {
     var quantity by BooksTable.quantity
 }
 
+@Serializable
 data class Book(
     val id: Int,
     val isbn: String,

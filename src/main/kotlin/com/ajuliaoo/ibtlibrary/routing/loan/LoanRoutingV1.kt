@@ -23,6 +23,9 @@ fun Routing.loanRouting(loanRepository: LoanRepository) {
 private fun Route.createLoanRoute(
     loanRepository: LoanRepository
 ) {
+    // TODO: Adicionar validações diferentes para personId e bookId
+    // TODO: Relacionar a quantidade de livros em estoque com a quantidade de livros emprestados
+    // TODO: Não permitir que um usuário faça o empréstimo do mesmo livro ao mesmo tempo mais de 1x
     post("/{bookId}/{personId}") {
         if (!isUserLibrarian()) throw UserIsNotLibrarianException()
 
@@ -30,7 +33,10 @@ private fun Route.createLoanRoute(
         val personId = call.parameters["personId"]!!.toInt()
 
         try {
-            val loan = loanRepository.createLoan(bookId, personId)
+            val loan = loanRepository.createLoan(
+                bookId = bookId,
+                personId = personId
+            )
             call.respond(HttpStatusCode.Created, loan)
         } catch (ex: ExposedSQLException) {
             throw BookNotFoundException()

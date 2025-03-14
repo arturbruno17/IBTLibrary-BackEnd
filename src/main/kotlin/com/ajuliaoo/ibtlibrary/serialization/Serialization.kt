@@ -1,4 +1,4 @@
-package com.ajuliaoo.ibtlibrary
+package com.ajuliaoo.ibtlibrary.serialization
 
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*

@@ -898,12 +898,14 @@ components:
         book:
           $ref: "#/components/schemas/Book"
         start_date:
-          $ref: "#/components/schemas/Instant"
+          type: "string"
+          format: "date-time"
         duration:
           type: "integer"
           format: "int32"
         return_date:
-          $ref: "#/components/schemas/Instant"
+          type: "string"
+          format: "date-time"
       required:
         - "person"
         - "book"

@@ -9,10 +9,10 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import java.time.Instant
 
 class PostgresLoanRepository : LoanRepository {
-    override suspend fun createLoan(peopleId: Int, bookId: Int): Loan = suspendTransaction {
+    override suspend fun createLoan(personId: Int, bookId: Int): Loan = suspendTransaction {
         val statement = LoanTable.insertAndGetId {
             it[book] = bookId
-            it[person] = peopleId
+            it[person] = personId
         }
         LoanDAO.findById(statement)!!.daoToModel()
     }
