@@ -11,6 +11,10 @@ class PostgresPeopleRepository : PeopleRepository {
             PeopleDAO.all().map { it.daoToModel() }
         }
 
+    override suspend fun existsById(id: Int): Boolean = suspendTransaction {
+        PeopleDAO.findById(id) != null
+    }
+
     override suspend fun getPersonById(id: Int) =
         suspendTransaction {
             PeopleDAO.findById(id)?.daoToModel()

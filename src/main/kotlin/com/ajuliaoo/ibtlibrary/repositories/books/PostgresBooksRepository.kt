@@ -13,6 +13,10 @@ class PostgresBooksRepository : BooksRepository {
         BooksDAO.all().map { it.daoToModel() }
     }
 
+    override suspend fun existsById(id: Int): Boolean = suspendTransaction {
+        BooksDAO.findById(id) != null
+    }
+
     override suspend fun getBookById(id: Int): Book? = suspendTransaction {
         BooksDAO.findById(id)?.daoToModel()
     }

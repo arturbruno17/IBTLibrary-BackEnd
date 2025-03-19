@@ -69,5 +69,12 @@ fun Application.configureStatusPages() {
                 ErrorResponse(cause.message)
             )
         }
+
+        exception<UserNotFoundException> { call, cause ->
+            call.respond(
+                HttpStatusCode.NotFound,
+                ErrorResponse(cause.message)
+            )
+        }
     }
 }

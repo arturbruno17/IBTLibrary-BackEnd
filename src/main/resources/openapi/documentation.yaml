@@ -444,7 +444,6 @@ paths:
           schema:
             type: "integer"
             format: "int32"
-
       responses:
         "403":
           description: "Forbidden"
@@ -474,6 +473,10 @@ paths:
                   description: ""
                   value:
                     message: "Livro não encontrado na nossa base de dados"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "Usuário não encontrado na nossa base de dados"
   /api/v1/loan/{loanId}/extend:
     patch:
       tags:

@@ -28,7 +28,11 @@ fun Application.configureRouting(
         )
         booksRouting(booksRepository = booksRepository)
         peopleRouting(peopleRepository = peopleRepository)
-        loanRouting(loanRepository = loanRepository)
+        loanRouting(
+            booksRepository = booksRepository,
+            peopleRepository = peopleRepository,
+            loanRepository = loanRepository
+        )
         swaggerUI(path = "/swagger")
     }
 }
