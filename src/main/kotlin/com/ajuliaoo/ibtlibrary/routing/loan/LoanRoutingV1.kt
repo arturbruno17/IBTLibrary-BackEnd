@@ -1,5 +1,6 @@
 package com.ajuliaoo.ibtlibrary.routing.loan
 
+import com.ajuliaoo.ibtlibrary.exceptions.AllInStockWereLoaned
 import com.ajuliaoo.ibtlibrary.exceptions.BookNotFoundException
 import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotLibrarianException
 import com.ajuliaoo.ibtlibrary.exceptions.UserNotFoundException
@@ -11,7 +12,6 @@ import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.exceptions.ExposedSQLException
 
 fun Routing.loanRouting(
     loanRepository: LoanRepository,
@@ -36,7 +36,6 @@ private fun Route.createLoanRoute(
     booksRepository: BooksRepository,
     loanRepository: LoanRepository
 ) {
-    // TODO: Relacionar a quantidade de livros em estoque com a quantidade de livros emprestados
     // TODO: Não permitir que um usuário faça o empréstimo do mesmo livro ao mesmo tempo mais de 1x
     post("/{bookId}/{personId}") {
         if (!isUserLibrarian()) throw UserIsNotLibrarianException()
@@ -45,7 +44,11 @@ private fun Route.createLoanRoute(
         val personId = call.parameters["personId"]!!.toInt()
 
         if (!peopleRepository.existsById(personId)) throw UserNotFoundException()
-        if (!booksRepository.existsById(bookId)) throw BookNotFoundException()
+
+        val book = booksRepository.getBookById(bookId) ?: throw BookNotFoundException()
+        val activeLoansByBookId = loanRepository.activeLoansByBookId(bookId)
+
+        if (activeLoansByBookId.size >= book.quantity) throw AllInStockWereLoaned()
 
         val loan = loanRepository.createLoan(
             bookId = bookId,

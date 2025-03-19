@@ -477,6 +477,17 @@ paths:
                   description: ""
                   value:
                     message: "Usuário não encontrado na nossa base de dados"
+        "412":
+          description: "Precondition Failed"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Todos os exemplares desse livro estão emprestados"
   /api/v1/loan/{loanId}/extend:
     patch:
       tags:
