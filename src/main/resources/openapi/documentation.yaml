@@ -488,6 +488,10 @@ paths:
                   description: ""
                   value:
                     message: "Todos os exemplares desse livro estão emprestados"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "O usuário já tem o livro <bookName> com empréstimo ativo"
   /api/v1/loan/{loanId}/extend:
     patch:
       tags:

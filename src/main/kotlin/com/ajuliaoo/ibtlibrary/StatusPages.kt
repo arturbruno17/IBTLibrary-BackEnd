@@ -83,5 +83,13 @@ fun Application.configureStatusPages() {
                 ErrorResponse(cause.message)
             )
         }
+
+        exception<PersonAlreadyLoanedTheBook> { call, cause ->
+            call.respond(
+                HttpStatusCode.PreconditionFailed,
+                ErrorResponse(cause.message)
+            )
+
+        }
     }
 }

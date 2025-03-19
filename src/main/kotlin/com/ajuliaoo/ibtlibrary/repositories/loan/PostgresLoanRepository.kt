@@ -19,7 +19,7 @@ class PostgresLoanRepository : LoanRepository {
     }
 
     override suspend fun activeLoansByBookId(bookId: Int): List<Loan> = suspendTransaction {
-        LoanDAO.find { (LoanTable.book eq bookId) and (LoanTable.returnDate neq null) }.map { it.daoToModel() }
+        LoanDAO.find { (LoanTable.book eq bookId) and (LoanTable.returnDate eq null) }.map { it.daoToModel() }
     }
 
     override suspend fun returnBook(loanId: Int): Loan? = suspendTransaction {

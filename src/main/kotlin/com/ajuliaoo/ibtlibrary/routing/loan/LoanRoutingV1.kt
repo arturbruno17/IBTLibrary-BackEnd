@@ -1,9 +1,6 @@
 package com.ajuliaoo.ibtlibrary.routing.loan
 
-import com.ajuliaoo.ibtlibrary.exceptions.AllInStockWereLoaned
-import com.ajuliaoo.ibtlibrary.exceptions.BookNotFoundException
-import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotLibrarianException
-import com.ajuliaoo.ibtlibrary.exceptions.UserNotFoundException
+import com.ajuliaoo.ibtlibrary.exceptions.*
 import com.ajuliaoo.ibtlibrary.repositories.books.BooksRepository
 import com.ajuliaoo.ibtlibrary.repositories.loan.LoanRepository
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
@@ -36,7 +33,6 @@ private fun Route.createLoanRoute(
     booksRepository: BooksRepository,
     loanRepository: LoanRepository
 ) {
-    // TODO: Não permitir que um usuário faça o empréstimo do mesmo livro ao mesmo tempo mais de 1x
     post("/{bookId}/{personId}") {
         if (!isUserLibrarian()) throw UserIsNotLibrarianException()
 
@@ -49,6 +45,7 @@ private fun Route.createLoanRoute(
         val activeLoansByBookId = loanRepository.activeLoansByBookId(bookId)
 
         if (activeLoansByBookId.size >= book.quantity) throw AllInStockWereLoaned()
+        if (activeLoansByBookId.any { it.person.id == personId }) throw PersonAlreadyLoanedTheBook(book.title)
 
         val loan = loanRepository.createLoan(
             bookId = bookId,
