@@ -62,5 +62,12 @@ fun Application.configureStatusPages() {
                 ErrorResponse(cause.message)
             )
         }
+
+        exception<ISBNMustBeUniqueException> { call, cause ->
+            call.respond(
+                HttpStatusCode.PreconditionFailed,
+                ErrorResponse(cause.message)
+            )
+        }
     }
 }
