@@ -431,6 +431,44 @@ paths:
             '*/*':
               schema:
                 type: "object"
+  /api/v1/loan:
+    get:
+      tags:
+        - Loan
+      security:
+        - bearerAuth: [ ]
+      description: ""
+      responses:
+        "403":
+          description: "Forbidden"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Você não tem permissões de bibliotecário"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Loan"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Token inválido ou expirado"
   /api/v1/loan/{bookId}/{personId}:
     post:
       tags:

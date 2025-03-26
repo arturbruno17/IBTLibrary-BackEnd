@@ -10,7 +10,6 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-// TODO: Criar rota para listar todos os empréstimos: permitir filtro por pessoa ou livro
 fun Routing.loanRouting(
     loanRepository: LoanRepository,
     booksRepository: BooksRepository,
@@ -18,6 +17,7 @@ fun Routing.loanRouting(
 ) {
     route("/api/v1/loan") {
         authenticate {
+            getAllLoans(loanRepository = loanRepository)
             createLoanRoute(
                 peopleRepository = peopleRepository,
                 booksRepository = booksRepository,
@@ -26,6 +26,15 @@ fun Routing.loanRouting(
             extendLoanRoute(loanRepository = loanRepository)
             returnBookRoute(loanRepository = loanRepository)
         }
+    }
+}
+
+private fun Route.getAllLoans(loanRepository: LoanRepository) {
+    get {
+        if (!isUserLibrarian()) throw UserIsNotLibrarianException()
+
+        val loans = loanRepository.getAllLoans()
+        call.respond(HttpStatusCode.OK, loans)
     }
 }
 

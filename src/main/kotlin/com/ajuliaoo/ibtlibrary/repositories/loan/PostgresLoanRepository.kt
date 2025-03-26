@@ -10,6 +10,10 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import java.time.Instant
 
 class PostgresLoanRepository : LoanRepository {
+    override suspend fun getAllLoans(): List<Loan> = suspendTransaction {
+        LoanDAO.all().map { it.daoToModel() }
+    }
+
     override suspend fun createLoan(personId: Int, bookId: Int): Loan = suspendTransaction {
         val statement = LoanTable.insertAndGetId {
             it[book] = bookId
