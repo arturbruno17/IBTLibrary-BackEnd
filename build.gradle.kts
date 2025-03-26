@@ -37,6 +37,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jwt")
     implementation("io.ktor:ktor-server-swagger")
     implementation("io.ktor:ktor-server-host-common")
+    implementation("io.ktor:ktor-server-cors")
 
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")

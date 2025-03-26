@@ -34,4 +34,5 @@ fun Application.module() {
         hashingService = hashingService,
         tokenService = jwtTokenService
     )
+    configureCORS()
 }
