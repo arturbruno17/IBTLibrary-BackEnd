@@ -4,7 +4,7 @@ import com.ajuliaoo.ibtlibrary.models.Book
 
 
 interface BooksRepository {
-    suspend fun getBooks(): List<Book>
+    suspend fun getBooks(query: String?): List<Book>
     suspend fun existsById(id: Int): Boolean
     suspend fun getBookById(id: Int): Book?
     suspend fun insertBook(isbn: String, title: String, author: String?, quantity: Int): Book

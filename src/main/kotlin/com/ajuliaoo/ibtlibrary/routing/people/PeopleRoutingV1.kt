@@ -28,6 +28,7 @@ fun Routing.peopleRouting(
     }
 }
 
+// TODO: Adicionar parâmetros de query para filtro
 private fun Route.getAllPeopleRoute(
     peopleRepository: PeopleRepository
 ) {

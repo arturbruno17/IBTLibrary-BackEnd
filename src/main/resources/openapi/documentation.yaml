@@ -166,6 +166,13 @@ paths:
       security:
         - bearerAuth: [ ]
       description: ""
+      parameters:
+        - name: "q"
+          in: "query"
+          description: Query to filter by title, author or ISBN
+          required: false
+          schema:
+            type: "string"
       responses:
         "200":
           description: "OK"

@@ -10,6 +10,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
+// TODO: Criar rota para listar todos os empréstimos: permitir filtro por pessoa ou livro
 fun Routing.loanRouting(
     loanRepository: LoanRepository,
     booksRepository: BooksRepository,

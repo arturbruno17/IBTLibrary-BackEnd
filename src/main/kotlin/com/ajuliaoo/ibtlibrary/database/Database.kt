@@ -1,4 +1,4 @@
-package com.ajuliaoo.ibtlibrary
+package com.ajuliaoo.ibtlibrary.database
 
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
