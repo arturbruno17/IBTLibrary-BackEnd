@@ -604,6 +604,13 @@ paths:
       security:
         - bearerAuth: [ ]
       description: ""
+      parameters:
+        - name: "q"
+          description: "Query to filter by name or e-mail"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
       responses:
         "200":
           description: "OK"

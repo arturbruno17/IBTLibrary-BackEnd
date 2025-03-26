@@ -28,12 +28,12 @@ fun Routing.peopleRouting(
     }
 }
 
-// TODO: Adicionar parâmetros de query para filtro
 private fun Route.getAllPeopleRoute(
     peopleRepository: PeopleRepository
 ) {
     get {
-        val people = peopleRepository.getPeople()
+        val query = call.queryParameters["q"]
+        val people = peopleRepository.getPeople(query)
         call.respond(HttpStatusCode.OK, people)
     }
 }
