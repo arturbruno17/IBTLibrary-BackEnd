@@ -26,7 +26,7 @@ CREATE TABLE loan
     id          SERIAL PRIMARY KEY NOT NULL,
     people_id   INT                NOT NULL REFERENCES people (id),
     book_id     INT                NOT NULL REFERENCES books (id),
---     start_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    start_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
     duration    INT                NOT NULL DEFAULT 15,
     return_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL
 );
