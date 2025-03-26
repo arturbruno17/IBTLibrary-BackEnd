@@ -5,10 +5,15 @@ import com.ajuliaoo.ibtlibrary.models.LoanDAO
 import com.ajuliaoo.ibtlibrary.models.LoanTable
 import com.ajuliaoo.ibtlibrary.models.daoToModel
 import com.ajuliaoo.ibtlibrary.repositories.suspendTransaction
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insertAndGetId
 import java.time.Instant
 
 class PostgresLoanRepository : LoanRepository {
+    override suspend fun getAllLoans(): List<Loan> = suspendTransaction {
+        LoanDAO.all().map { it.daoToModel() }
+    }
+
     override suspend fun createLoan(personId: Int, bookId: Int): Loan = suspendTransaction {
         val statement = LoanTable.insertAndGetId {
             it[book] = bookId
@@ -16,6 +21,11 @@ class PostgresLoanRepository : LoanRepository {
         }
         LoanDAO.findById(statement)!!.daoToModel()
     }
+
+    override suspend fun activeLoansByBookId(bookId: Int): List<Loan> = suspendTransaction {
+        LoanDAO.find { (LoanTable.book eq bookId) and (LoanTable.returnDate eq null) }.map { it.daoToModel() }
+    }
+
     override suspend fun returnBook(loanId: Int): Loan? = suspendTransaction {
         LoanDAO.findByIdAndUpdate(loanId) {
             it.returnDate = Instant.now()

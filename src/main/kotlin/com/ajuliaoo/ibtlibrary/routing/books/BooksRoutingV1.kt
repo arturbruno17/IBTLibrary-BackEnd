@@ -1,5 +1,6 @@
 package com.ajuliaoo.ibtlibrary.routing.books
 
+import com.ajuliaoo.ibtlibrary.exceptions.ISBNMustBeUniqueException
 import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotLibrarianException
 import com.ajuliaoo.ibtlibrary.routing.books.update.request.BookDto
 import com.ajuliaoo.ibtlibrary.repositories.books.BooksRepository
@@ -9,6 +10,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 
 fun Routing.booksRouting(booksRepository: BooksRepository) {
     route("/api/v1/books") {
@@ -26,7 +28,8 @@ private fun Route.getAllBooksRoute(
     booksRepository: BooksRepository
 ) {
     get {
-        val books = booksRepository.getBooks()
+        val query = call.queryParameters["q"]
+        val books = booksRepository.getBooks(query)
         call.respond(HttpStatusCode.OK, books)
     }
 }
@@ -46,39 +49,45 @@ private fun Route.getBookByIdRoute(
 private fun Route.createBookRoute(
     booksRepository: BooksRepository
 ) {
-    // TODO: Adicionar validação para ISBN único
     post {
         if (!isUserLibrarian()) throw UserIsNotLibrarianException()
         val book = call.receive<BookDto>()
-        val createdBook = booksRepository.insertBook(
-            title = book.title,
-            author = book.author,
-            isbn = book.isbn,
-            quantity = book.quantity
-        )
-        call.respond(HttpStatusCode.Created, createdBook)
+        try {
+            val createdBook = booksRepository.insertBook(
+                title = book.title,
+                author = book.author,
+                isbn = book.isbn,
+                quantity = book.quantity
+            )
+            call.respond(HttpStatusCode.Created, createdBook)
+        } catch (ex: ExposedSQLException) {
+            throw ISBNMustBeUniqueException()
+        }
     }
 }
 
 private fun Route.updateBookRoute(
     booksRepository: BooksRepository
 ) {
-    // TODO: Adicionar validação para ISBN único
     put("/{id}") {
         if (!isUserLibrarian()) throw UserIsNotLibrarianException()
 
         val bookId = call.parameters["id"]!!.toInt()
         val book = call.receive<BookDto>()
-        val updatedBook = booksRepository.updateBook(
-            id = bookId,
-            title = book.title,
-            author = book.author,
-            isbn = book.isbn,
-            quantity = book.quantity
-        )
-        updatedBook
-            ?.let { call.respond(HttpStatusCode.OK, it) }
-            ?: call.respond(HttpStatusCode.NotFound)
+        try {
+            val updatedBook = booksRepository.updateBook(
+                id = bookId,
+                title = book.title,
+                author = book.author,
+                isbn = book.isbn,
+                quantity = book.quantity
+            )
+            updatedBook
+                ?.let { call.respond(HttpStatusCode.OK, it) }
+                ?: call.respond(HttpStatusCode.NotFound)
+        } catch (ex: ExposedSQLException) {
+            throw ISBNMustBeUniqueException()
+        }
     }
 }
 

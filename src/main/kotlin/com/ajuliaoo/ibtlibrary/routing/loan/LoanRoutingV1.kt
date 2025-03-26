@@ -1,46 +1,67 @@
 package com.ajuliaoo.ibtlibrary.routing.loan
 
-import com.ajuliaoo.ibtlibrary.exceptions.BookNotFoundException
-import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotLibrarianException
+import com.ajuliaoo.ibtlibrary.exceptions.*
+import com.ajuliaoo.ibtlibrary.repositories.books.BooksRepository
 import com.ajuliaoo.ibtlibrary.repositories.loan.LoanRepository
+import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
 import com.ajuliaoo.ibtlibrary.routing.isUserLibrarian
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.exceptions.ExposedSQLException
 
-fun Routing.loanRouting(loanRepository: LoanRepository) {
+fun Routing.loanRouting(
+    loanRepository: LoanRepository,
+    booksRepository: BooksRepository,
+    peopleRepository: PeopleRepository
+) {
     route("/api/v1/loan") {
         authenticate {
-            createLoanRoute(loanRepository = loanRepository)
+            getAllLoans(loanRepository = loanRepository)
+            createLoanRoute(
+                peopleRepository = peopleRepository,
+                booksRepository = booksRepository,
+                loanRepository = loanRepository
+            )
             extendLoanRoute(loanRepository = loanRepository)
             returnBookRoute(loanRepository = loanRepository)
         }
     }
 }
 
+private fun Route.getAllLoans(loanRepository: LoanRepository) {
+    get {
+        if (!isUserLibrarian()) throw UserIsNotLibrarianException()
+
+        val loans = loanRepository.getAllLoans()
+        call.respond(HttpStatusCode.OK, loans)
+    }
+}
+
 private fun Route.createLoanRoute(
+    peopleRepository: PeopleRepository,
+    booksRepository: BooksRepository,
     loanRepository: LoanRepository
 ) {
-    // TODO: Adicionar validações diferentes para personId e bookId
-    // TODO: Relacionar a quantidade de livros em estoque com a quantidade de livros emprestados
-    // TODO: Não permitir que um usuário faça o empréstimo do mesmo livro ao mesmo tempo mais de 1x
     post("/{bookId}/{personId}") {
         if (!isUserLibrarian()) throw UserIsNotLibrarianException()
 
         val bookId = call.parameters["bookId"]!!.toInt()
         val personId = call.parameters["personId"]!!.toInt()
 
-        try {
-            val loan = loanRepository.createLoan(
-                bookId = bookId,
-                personId = personId
-            )
-            call.respond(HttpStatusCode.Created, loan)
-        } catch (ex: ExposedSQLException) {
-            throw BookNotFoundException()
-        }
+        if (!peopleRepository.existsById(personId)) throw UserNotFoundException()
+
+        val book = booksRepository.getBookById(bookId) ?: throw BookNotFoundException()
+        val activeLoansByBookId = loanRepository.activeLoansByBookId(bookId)
+
+        if (activeLoansByBookId.size >= book.quantity) throw AllInStockWereLoaned()
+        if (activeLoansByBookId.any { it.person.id == personId }) throw PersonAlreadyLoanedTheBook(book.title)
+
+        val loan = loanRepository.createLoan(
+            bookId = bookId,
+            personId = personId
+        )
+        call.respond(HttpStatusCode.Created, loan)
     }
 }
 
@@ -66,7 +87,7 @@ private fun Route.returnBookRoute(
 
         val loanId = call.parameters["loanId"]!!.toInt()
         loanRepository.returnBook(loanId)
-            ?.let {  call.respond(HttpStatusCode.OK, it) }
+            ?.let { call.respond(HttpStatusCode.OK, it) }
             ?: call.respond(HttpStatusCode.NotFound)
     }
 }

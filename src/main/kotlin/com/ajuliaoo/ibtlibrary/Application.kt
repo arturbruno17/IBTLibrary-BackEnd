@@ -1,5 +1,6 @@
 package com.ajuliaoo.ibtlibrary
 
+import com.ajuliaoo.ibtlibrary.database.configureDatabase
 import com.ajuliaoo.ibtlibrary.repositories.books.PostgresBooksRepository
 import com.ajuliaoo.ibtlibrary.repositories.loan.PostgresLoanRepository
 import com.ajuliaoo.ibtlibrary.repositories.people.PostgresPeopleRepository

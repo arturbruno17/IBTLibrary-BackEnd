@@ -62,5 +62,34 @@ fun Application.configureStatusPages() {
                 ErrorResponse(cause.message)
             )
         }
+
+        exception<ISBNMustBeUniqueException> { call, cause ->
+            call.respond(
+                HttpStatusCode.PreconditionFailed,
+                ErrorResponse(cause.message)
+            )
+        }
+
+        exception<UserNotFoundException> { call, cause ->
+            call.respond(
+                HttpStatusCode.NotFound,
+                ErrorResponse(cause.message)
+            )
+        }
+
+        exception<AllInStockWereLoaned> { call, cause ->
+            call.respond(
+                HttpStatusCode.PreconditionFailed,
+                ErrorResponse(cause.message)
+            )
+        }
+
+        exception<PersonAlreadyLoanedTheBook> { call, cause ->
+            call.respond(
+                HttpStatusCode.PreconditionFailed,
+                ErrorResponse(cause.message)
+            )
+
+        }
     }
 }

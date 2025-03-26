@@ -166,6 +166,13 @@ paths:
       security:
         - bearerAuth: [ ]
       description: ""
+      parameters:
+        - name: "q"
+          in: "query"
+          description: Query to filter by title, author or ISBN
+          required: false
+          schema:
+            type: "string"
       responses:
         "200":
           description: "OK"
@@ -248,6 +255,17 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Book"
+        "412":
+          description: "Precondition Failed"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Número ISBN deve ser único"
   /api/v1/books/{id}:
     get:
       tags:
@@ -354,6 +372,17 @@ paths:
                   description: ""
                   value:
                     message: "Token inválido ou expirado"
+        "412":
+          description: "Precondition Failed"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Número ISBN deve ser único"
     delete:
       tags:
         - Books
@@ -402,6 +431,44 @@ paths:
             '*/*':
               schema:
                 type: "object"
+  /api/v1/loan:
+    get:
+      tags:
+        - Loan
+      security:
+        - bearerAuth: [ ]
+      description: ""
+      responses:
+        "403":
+          description: "Forbidden"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Você não tem permissões de bibliotecário"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Loan"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Token inválido ou expirado"
   /api/v1/loan/{bookId}/{personId}:
     post:
       tags:
@@ -422,7 +489,6 @@ paths:
           schema:
             type: "integer"
             format: "int32"
-
       responses:
         "403":
           description: "Forbidden"
@@ -452,6 +518,25 @@ paths:
                   description: ""
                   value:
                     message: "Livro não encontrado na nossa base de dados"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "Usuário não encontrado na nossa base de dados"
+        "412":
+          description: "Precondition Failed"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Todos os exemplares desse livro estão emprestados"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "O usuário já tem o livro <bookName> com empréstimo ativo"
   /api/v1/loan/{loanId}/extend:
     patch:
       tags:
@@ -557,6 +642,13 @@ paths:
       security:
         - bearerAuth: [ ]
       description: ""
+      parameters:
+        - name: "q"
+          description: "Query to filter by name or e-mail"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
       responses:
         "200":
           description: "OK"
