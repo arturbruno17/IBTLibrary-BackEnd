@@ -10,6 +10,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.javatime.timestamp
 import java.time.Instant
+import kotlin.time.Duration.Companion.days
 
 object LoanTable : IntIdTable("loan") {
     val person = reference("people_id", PeopleTable)
@@ -31,6 +32,7 @@ class LoanDAO(id: EntityID<Int>) : IntEntity(id) {
 
 @Serializable
 data class Loan(
+    val id: Int,
     val person: Person,
     val book: Book,
     @SerialName("start_date")
@@ -40,10 +42,19 @@ data class Loan(
     @SerialName("return_date")
     @Serializable(with = InstantSerializer::class)
     val returnDate: Instant?,
-)
+) {
+    enum class Type { IN_DAYS, RETURNED, OVERDUE }
+
+    val type = when {
+        returnDate != null -> Type.RETURNED
+        Instant.now() > startDate.plusMillis(duration.days.inWholeMilliseconds) -> Type.OVERDUE
+        else -> Type.IN_DAYS
+    }
+}
 
 fun LoanDAO.daoToModel(): Loan {
     return Loan(
+        id = this.id.value,
         person = this.person.daoToModel(),
         book = this.book.daoToModel(),
         startDate = this.startDate,

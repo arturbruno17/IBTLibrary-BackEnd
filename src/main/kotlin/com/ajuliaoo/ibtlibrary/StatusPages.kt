@@ -91,5 +91,12 @@ fun Application.configureStatusPages() {
             )
 
         }
+
+        exception<InvalidLoanTypeException> { call, cause ->
+            call.respond(
+                HttpStatusCode.BadRequest,
+                BadRequestResponse(listOf(cause.message))
+            )
+        }
     }
 }

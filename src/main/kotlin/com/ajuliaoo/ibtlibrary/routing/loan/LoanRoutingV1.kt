@@ -1,6 +1,7 @@
 package com.ajuliaoo.ibtlibrary.routing.loan
 
 import com.ajuliaoo.ibtlibrary.exceptions.*
+import com.ajuliaoo.ibtlibrary.models.Loan
 import com.ajuliaoo.ibtlibrary.repositories.books.BooksRepository
 import com.ajuliaoo.ibtlibrary.repositories.loan.LoanRepository
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
@@ -33,7 +34,17 @@ private fun Route.getAllLoans(loanRepository: LoanRepository) {
     get {
         if (!isUserLibrarian()) throw UserIsNotLibrarianException()
 
-        val loans = loanRepository.getAllLoans()
+        val personId = call.queryParameters["person_id"]?.toInt()
+        val bookId = call.queryParameters["book_id"]?.toInt()
+
+        val types = try {
+            call.queryParameters["types"]?.split(",")
+                ?.map { Loan.Type.valueOf(it.uppercase()) }
+        } catch (ex: IllegalArgumentException) {
+            throw InvalidLoanTypeException()
+        }
+
+        val loans = loanRepository.getAllLoans(bookId = bookId, personId = personId, types = types)
         call.respond(HttpStatusCode.OK, loans)
     }
 }
