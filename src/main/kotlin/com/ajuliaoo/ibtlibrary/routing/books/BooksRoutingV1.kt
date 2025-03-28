@@ -29,7 +29,9 @@ private fun Route.getAllBooksRoute(
 ) {
     get {
         val query = call.queryParameters["q"]
-        val books = booksRepository.getBooks(query)
+        val page = call.queryParameters["page"]?.toIntOrNull() ?: 1
+        val limit = call.queryParameters["limit"]?.toIntOrNull() ?: 25
+        val books = booksRepository.getBooks(query = query, page = page, limit = limit)
         call.respond(HttpStatusCode.OK, books)
     }
 }

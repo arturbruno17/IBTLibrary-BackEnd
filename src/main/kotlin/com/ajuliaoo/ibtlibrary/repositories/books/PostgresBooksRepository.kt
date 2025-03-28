@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.or
 
 class PostgresBooksRepository : BooksRepository {
-    override suspend fun getBooks(query: String?): List<Book> = suspendTransaction {
+    override suspend fun getBooks(query: String?, page: Int, limit: Int): List<Book> = suspendTransaction {
         BooksDAO.run {
             if (query != null) {
                 find {
@@ -21,7 +21,7 @@ class PostgresBooksRepository : BooksRepository {
                 }
             } else {
                 all()
-            }
+            }.offset(page * limit.toLong()).limit(limit)
         }.map { it.daoToModel() }
     }
 
