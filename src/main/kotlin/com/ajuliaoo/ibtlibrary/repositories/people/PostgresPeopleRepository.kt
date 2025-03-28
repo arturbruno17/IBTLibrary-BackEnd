@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.or
 
 class PostgresPeopleRepository : PeopleRepository {
-    override suspend fun getPeople(query: String?): List<Person> = suspendTransaction {
+    override suspend fun getPeople(query: String?, page: Int, limit: Int): List<Person> = suspendTransaction {
         PeopleDAO.run {
             if (query != null) {
                 find {
@@ -17,7 +17,7 @@ class PostgresPeopleRepository : PeopleRepository {
                 }
             } else {
                 all()
-            }
+            }.offset(page * limit.toLong()).limit(limit)
         }.map { it.daoToModel() }
     }
 
