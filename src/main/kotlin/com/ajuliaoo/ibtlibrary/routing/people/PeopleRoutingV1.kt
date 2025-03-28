@@ -1,11 +1,11 @@
 package com.ajuliaoo.ibtlibrary.routing.people
 
-import com.ajuliaoo.ibtlibrary.exceptions.ContactAdministratorException
-import com.ajuliaoo.ibtlibrary.exceptions.InvalidRoleException
-import com.ajuliaoo.ibtlibrary.exceptions.UserIsNotAdminException
+import com.ajuliaoo.ibtlibrary.exceptions.*
 import com.ajuliaoo.ibtlibrary.models.Role
+import com.ajuliaoo.ibtlibrary.repositories.loan.LoanRepository
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
 import com.ajuliaoo.ibtlibrary.routing.isUserAdmin
+import com.ajuliaoo.ibtlibrary.routing.isUserLibrarian
 import com.ajuliaoo.ibtlibrary.routing.people.update.request.UpdatePersonDto
 import io.ktor.http.*
 import io.ktor.server.auth.*
@@ -16,11 +16,16 @@ import io.ktor.server.routing.*
 
 fun Routing.peopleRouting(
     peopleRepository: PeopleRepository,
+    loanRepository: LoanRepository,
 ) {
     route("/api/v1/people") {
         authenticate {
             getAllPeopleRoute(peopleRepository = peopleRepository)
             getPersonByIdRoute(peopleRepository = peopleRepository)
+            getLoansByPersonIdRoute(
+                loanRepository = loanRepository,
+                peopleRepository = peopleRepository
+            )
             updatePersonByIdRoute(peopleRepository = peopleRepository)
             turnPersonInDifferentRoleRoute(peopleRepository = peopleRepository)
             deletePersonByIdRoute(peopleRepository = peopleRepository)
@@ -47,6 +52,28 @@ private fun Route.getPersonByIdRoute(
         person
             ?.let { call.respond(HttpStatusCode.OK, it) }
             ?: call.respond(HttpStatusCode.NotFound)
+    }
+}
+
+private fun Route.getLoansByPersonIdRoute(
+    loanRepository: LoanRepository,
+    peopleRepository: PeopleRepository
+) {
+    get("/{id}/loans") {
+        val id = call.parameters["id"]!!.toInt()
+
+        val existsPerson = peopleRepository.existsById(id)
+        if (!existsPerson) throw UserNotFoundException()
+
+        val principal = call.principal<JWTPrincipal>()!!
+        val requesterId = principal.subject!!.toInt()
+
+        if (requesterId != id && !isUserLibrarian()) {
+            throw UserIsNotLibrarianException()
+        }
+
+        val loans = loanRepository.getAllLoans(personId = id)
+        call.respond(HttpStatusCode.OK, loans)
     }
 }
 

@@ -27,7 +27,10 @@ fun Application.configureRouting(
             tokenService = tokenService
         )
         booksRouting(booksRepository = booksRepository)
-        peopleRouting(peopleRepository = peopleRepository)
+        peopleRouting(
+            peopleRepository = peopleRepository,
+            loanRepository = loanRepository,
+        )
         loanRouting(
             booksRepository = booksRepository,
             peopleRepository = peopleRepository,
