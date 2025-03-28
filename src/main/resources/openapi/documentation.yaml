@@ -581,7 +581,7 @@ paths:
         - bearerAuth: [ ]
       description: ""
       parameters:
-        - name: "id"
+        - name: "loanId"
           in: "path"
           required: true
           schema:
@@ -630,7 +630,7 @@ paths:
         - bearerAuth: [ ]
       description: ""
       parameters:
-        - name: "id"
+        - name: "loanId"
           in: "path"
           required: true
           schema:
