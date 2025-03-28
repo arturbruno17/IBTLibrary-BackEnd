@@ -74,7 +74,7 @@ private fun Route.getLoansByPersonIdRoute(
             throw UserIsNotLibrarianException()
         }
 
-        val loans = loanRepository.getAllLoans(personId = id)
+        val loans = loanRepository.getAllLoans(personId = id, page = 1, limit = Int.MAX_VALUE)
         call.respond(HttpStatusCode.OK, loans)
     }
 }
