@@ -38,7 +38,9 @@ private fun Route.getAllPeopleRoute(
 ) {
     get {
         val query = call.queryParameters["q"]
-        val people = peopleRepository.getPeople(query)
+        val page = call.queryParameters["page"]?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+        val limit = call.queryParameters["limit"]?.toIntOrNull()?.coerceAtLeast(1) ?: 25
+        val people = peopleRepository.getPeople(query = query, page = page, limit = limit)
         call.respond(HttpStatusCode.OK, people)
     }
 }
@@ -72,7 +74,7 @@ private fun Route.getLoansByPersonIdRoute(
             throw UserIsNotLibrarianException()
         }
 
-        val loans = loanRepository.getAllLoans(personId = id)
+        val loans = loanRepository.getAllLoans(personId = id, page = 1, limit = Int.MAX_VALUE)
         call.respond(HttpStatusCode.OK, loans)
     }
 }

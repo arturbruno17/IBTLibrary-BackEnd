@@ -28,7 +28,13 @@ class PostgresLoanRepository : LoanRepository {
 
     private fun isReturned(): Op<Boolean> = LoanTable.returnDate.isNotNull()
 
-    override suspend fun getAllLoans(bookId: Int?, personId: Int?, types: List<Loan.Type>?): List<Loan> =
+    override suspend fun getAllLoans(
+        bookId: Int?,
+        personId: Int?,
+        types: List<Loan.Type>?,
+        page: Int,
+        limit: Int
+    ): List<Loan> =
         suspendTransaction {
             LoanDAO.run {
                 find {
@@ -47,7 +53,7 @@ class PostgresLoanRepository : LoanRepository {
                     }
 
                     condition
-                }
+                }.offset((page - 1) * limit.toLong()).limit(limit)
             }.map { it.daoToModel() }
         }
 
