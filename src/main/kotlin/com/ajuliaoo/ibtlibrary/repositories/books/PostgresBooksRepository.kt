@@ -21,7 +21,7 @@ class PostgresBooksRepository : BooksRepository {
                 }
             } else {
                 all()
-            }.offset(page * limit.toLong()).limit(limit)
+            }.offset((page - 1) * limit.toLong()).limit(limit)
         }.map { it.daoToModel() }
     }
 

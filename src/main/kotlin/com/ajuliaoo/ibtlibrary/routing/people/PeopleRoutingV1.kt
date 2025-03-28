@@ -38,8 +38,8 @@ private fun Route.getAllPeopleRoute(
 ) {
     get {
         val query = call.queryParameters["q"]
-        val page = call.queryParameters["page"]?.toIntOrNull() ?: 1
-        val limit = call.queryParameters["limit"]?.toIntOrNull() ?: 25
+        val page = call.queryParameters["page"]?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+        val limit = call.queryParameters["limit"]?.toIntOrNull()?.coerceAtLeast(1) ?: 25
         val people = peopleRepository.getPeople(query = query, page = page, limit = limit)
         call.respond(HttpStatusCode.OK, people)
     }
