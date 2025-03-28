@@ -1059,11 +1059,15 @@ components:
         quantity:
           type: "integer"
           format: "int32"
+        available:
+          type: "integer"
+          format: "int32"
       required:
         - "id"
         - "isbn"
         - "title"
         - "quantity"
+        - "available"
     BookDto:
       type: "object"
       properties:

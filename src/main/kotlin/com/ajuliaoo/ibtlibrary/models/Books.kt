@@ -6,7 +6,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-object BooksTable: IntIdTable("books") {
+object BooksTable : IntIdTable("books") {
     val isbn = varchar("isbn", 13).uniqueIndex()
     val title = text("title")
     val author = text("author").nullable()
@@ -20,15 +20,17 @@ class BooksDAO(id: EntityID<Int>) : IntEntity(id) {
     var title by BooksTable.title
     var author by BooksTable.author
     var quantity by BooksTable.quantity
+    val loans by LoanDAO referrersOn LoanTable.book
 }
 
 @Serializable
 data class Book(
     val id: Int,
     val isbn: String,
-    val title : String,
+    val title: String,
     val author: String?,
     val quantity: Int,
+    val available: Int,
 )
 
 fun BooksDAO.daoToModel(): Book {
@@ -37,6 +39,7 @@ fun BooksDAO.daoToModel(): Book {
         isbn = this.isbn,
         title = this.title,
         author = this.author,
-        quantity = this.quantity
+        quantity = this.quantity,
+        available = this.quantity - this.loans.count { it.returnDate == null }
     )
 }
