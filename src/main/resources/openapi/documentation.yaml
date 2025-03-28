@@ -471,6 +471,16 @@ paths:
                 - "OVERDUE"
             style: form
             explode: true
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
       description: ""
       responses:
         "403":

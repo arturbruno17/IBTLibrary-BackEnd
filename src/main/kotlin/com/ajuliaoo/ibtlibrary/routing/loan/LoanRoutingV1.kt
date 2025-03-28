@@ -36,6 +36,8 @@ private fun Route.getAllLoans(loanRepository: LoanRepository) {
 
         val personId = call.queryParameters["person_id"]?.toInt()
         val bookId = call.queryParameters["book_id"]?.toInt()
+        val page = call.queryParameters["page"]?.toIntOrNull() ?: 1
+        val limit = call.queryParameters["limit"]?.toIntOrNull() ?: 25
 
         val types = try {
             call.queryParameters["types"]?.split(",")
@@ -44,7 +46,8 @@ private fun Route.getAllLoans(loanRepository: LoanRepository) {
             throw InvalidLoanTypeException()
         }
 
-        val loans = loanRepository.getAllLoans(bookId = bookId, personId = personId, types = types)
+        val loans =
+            loanRepository.getAllLoans(bookId = bookId, personId = personId, types = types, page = page, limit = limit)
         call.respond(HttpStatusCode.OK, loans)
     }
 }
