@@ -12,8 +12,8 @@ class PostgresPeopleRepository : PeopleRepository {
         PeopleDAO.run {
             if (query != null) {
                 find {
-                    (PeopleTable.name ilike query) or
-                    (PeopleTable.email ilike query)
+                    (PeopleTable.name ilike "%$query%") or
+                    (PeopleTable.email ilike "%$query%")
                 }
             } else {
                 all()
