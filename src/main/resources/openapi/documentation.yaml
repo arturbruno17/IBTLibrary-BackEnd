@@ -715,6 +715,17 @@ paths:
           required: false
           schema:
             type: "integer"
+        - name: "roles"
+          in: "query"
+          required: false
+          schema:
+            type: "array"
+            items:
+              type: "string"
+              enum:
+                - "READER"
+                - "LIBRARIAN"
+                - "ADMIN"
       responses:
         "200":
           description: "OK"
