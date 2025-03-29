@@ -746,6 +746,18 @@ paths:
                   description: ""
                   value:
                     message: "Token inválido ou expirado"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BadRequestResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    reasons:
+                      - "Forneça um cargo válido"
   /api/v1/people/{id}:
     get:
       tags:
