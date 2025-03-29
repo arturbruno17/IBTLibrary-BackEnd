@@ -1016,6 +1016,42 @@ paths:
             '*/*':
               schema:
                 type: "object"
+  /api/v1/summary:
+    get:
+      tags:
+        - Summary
+      security:
+        - bearerAuth: [ ]
+      description: ""
+      responses:
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Token inválido ou expirado"
+        "403":
+          description: "Forbidden"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Você não tem permissões de bibliotecário"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SummaryResponse"
 components:
   schemas:
     BadRequestResponse:
@@ -1176,6 +1212,26 @@ components:
       required:
         - "name"
         - "email"
+    SummaryResponse:
+      type: "object"
+      properties:
+        totalBooks:
+          type: "integer"
+          format: "int32"
+        activeLoansCount:
+          type: "integer"
+          format: "int32"
+        readersCount:
+          type: "integer"
+          format: "int32"
+        overdueLoansCount:
+          type: "integer"
+          format: "int32"
+      required:
+        - "total_books"
+        - "active_loans_count"
+        - "readers_count"
+        - "overdue_loans_count"
   securitySchemes:
     bearerAuth: # arbitrary name for the security scheme
       type: http

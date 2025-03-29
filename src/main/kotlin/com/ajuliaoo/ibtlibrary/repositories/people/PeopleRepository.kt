@@ -10,6 +10,7 @@ interface PeopleRepository {
         page: Int,
         limit: Int
     ): List<Person>
+    suspend fun countReaders(): Int
     suspend fun existsById(id: Int): Boolean
     suspend fun getPersonById(id: Int): Person?
     suspend fun insert(name: String, role: Role, email: String, salt: String, hashPassword: String): Person

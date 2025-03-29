@@ -23,6 +23,10 @@ class PostgresPeopleRepository : PeopleRepository {
             }.map { it.daoToModel() }
         }
 
+    override suspend fun countReaders(): Int = suspendTransaction {
+        PeopleDAO.find { PeopleTable.role eq Role.READER }.count().toInt()
+    }
+
     override suspend fun existsById(id: Int): Boolean = suspendTransaction {
         PeopleDAO.findById(id) != null
     }

@@ -57,6 +57,16 @@ class PostgresLoanRepository : LoanRepository {
             }.map { it.daoToModel() }
         }
 
+    override suspend fun countLoansByTypes(types: List<Loan.Type>): Int = suspendTransaction {
+        LoanDAO.find {
+            buildList {
+                if (Loan.Type.IN_DAYS in types) add(isInDays())
+                if (Loan.Type.OVERDUE in types) add(isOverdue())
+                if (Loan.Type.RETURNED in types) add(isReturned())
+            }.takeIf { it.isNotEmpty() }?.reduce { acc, op -> acc or op } ?: Op.TRUE
+        }.count().toInt()
+    }
+
     override suspend fun createLoan(personId: Int, bookId: Int): Loan = suspendTransaction {
         val statement = LoanTable.insertAndGetId {
             it[book] = bookId
