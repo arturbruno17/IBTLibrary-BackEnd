@@ -691,6 +691,73 @@ paths:
                   description: ""
                   value:
                     message: "Token inválido ou expirado"
+  /api/v1/loan/activity:
+    get:
+      tags:
+        - Loan
+      security:
+        - bearerAuth: [ ]
+      description: ""
+      parameters:
+        - name: "maximum_date"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+            format: "date"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+      responses:
+        "403":
+          description: "Forbidden"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Você não tem permissões de bibliotecário"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BadRequestResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    reasons:
+                      - "A data fornecida é inválida"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Token inválido ou expirado"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/LoanActivity"
   /api/v1/people:
     get:
       tags:
@@ -715,6 +782,17 @@ paths:
           required: false
           schema:
             type: "integer"
+        - name: "roles"
+          in: "query"
+          required: false
+          schema:
+            type: "array"
+            items:
+              type: "string"
+              enum:
+                - "READER"
+                - "LIBRARIAN"
+                - "ADMIN"
       responses:
         "200":
           description: "OK"
@@ -735,6 +813,18 @@ paths:
                   description: ""
                   value:
                     message: "Token inválido ou expirado"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BadRequestResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    reasons:
+                      - "Forneça um cargo válido"
   /api/v1/people/{id}:
     get:
       tags:
@@ -993,6 +1083,42 @@ paths:
             '*/*':
               schema:
                 type: "object"
+  /api/v1/summary:
+    get:
+      tags:
+        - Summary
+      security:
+        - bearerAuth: [ ]
+      description: ""
+      responses:
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Token inválido ou expirado"
+        "403":
+          description: "Forbidden"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Você não tem permissões de bibliotecário"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SummaryResponse"
 components:
   schemas:
     BadRequestResponse:
@@ -1153,6 +1279,48 @@ components:
       required:
         - "name"
         - "email"
+    SummaryResponse:
+      type: "object"
+      properties:
+        totalBooks:
+          type: "integer"
+          format: "int32"
+        activeLoansCount:
+          type: "integer"
+          format: "int32"
+        readersCount:
+          type: "integer"
+          format: "int32"
+        overdueLoansCount:
+          type: "integer"
+          format: "int32"
+      required:
+        - "total_books"
+        - "active_loans_count"
+        - "readers_count"
+        - "overdue_loans_count"
+    LoanActivity:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        loan:
+          $ref: "#/components/schemas/Loan"
+        activity_type:
+          type: "string"
+          enum:
+            - "LOAN_CREATED"
+            - "LOAN_RETURNED"
+            - "LOAN_EXTENDED"
+        created_at:
+          type: "string"
+          format: "date-time"
+      required:
+        - "id"
+        - "loan"
+        - "activity_type"
+        - "created_at"
   securitySchemes:
     bearerAuth: # arbitrary name for the security scheme
       type: http

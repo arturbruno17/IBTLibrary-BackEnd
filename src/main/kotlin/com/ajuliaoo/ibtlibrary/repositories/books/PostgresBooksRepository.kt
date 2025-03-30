@@ -29,6 +29,10 @@ class PostgresBooksRepository : BooksRepository {
         BooksDAO.findById(id) != null
     }
 
+    override suspend fun countBooks(): Int = suspendTransaction {
+        BooksDAO.all().sumOf { it.quantity }
+    }
+
     override suspend fun getBookById(id: Int): Book? = suspendTransaction {
         BooksDAO.findById(id)?.daoToModel()
     }

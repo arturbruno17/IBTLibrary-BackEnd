@@ -4,21 +4,27 @@ import com.ajuliaoo.ibtlibrary.database.ilike
 import com.ajuliaoo.ibtlibrary.models.*
 import com.ajuliaoo.ibtlibrary.repositories.suspendTransaction
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.or
 
 class PostgresPeopleRepository : PeopleRepository {
-    override suspend fun getPeople(query: String?, page: Int, limit: Int): List<Person> = suspendTransaction {
-        PeopleDAO.run {
-            if (query != null) {
-                find {
-                    (PeopleTable.name ilike query) or
-                    (PeopleTable.email ilike query)
-                }
-            } else {
-                all()
-            }.offset((page - 1) * limit.toLong()).limit(limit)
-        }.map { it.daoToModel() }
+    override suspend fun getPeople(query: String?, roles: List<Role>, page: Int, limit: Int): List<Person> =
+        suspendTransaction {
+            PeopleDAO.run {
+                if (query != null) {
+                    find {
+                        ((PeopleTable.name ilike "%$query%") or
+                                (PeopleTable.email ilike "%$query%")) and (PeopleTable.role inList roles)
+                    }
+                } else {
+                    all()
+                }.offset((page - 1) * limit.toLong()).limit(limit)
+            }.map { it.daoToModel() }
+        }
+
+    override suspend fun countReaders(): Int = suspendTransaction {
+        PeopleDAO.find { PeopleTable.role eq Role.READER }.count().toInt()
     }
 
     override suspend fun existsById(id: Int): Boolean = suspendTransaction {
