@@ -73,12 +73,12 @@ class PostgresLoanRepository(
             it[book] = bookId
             it[person] = personId
         }
-        LoanDAO.findById(statement)!!.daoToModel().also {
-            loanActivityRepository.createLoanActivity(
-                activityType = ActivityType.LOAN_CREATED,
-                loanId = it.id
-            )
-        }
+        LoanDAO.findById(statement)!!.daoToModel()
+    }.also {
+        loanActivityRepository.createLoanActivity(
+            activity = Activity.LOAN_CREATED,
+            loanId = it.id
+        )
     }
 
     override suspend fun activeLoansByBookId(bookId: Int): List<Loan> = suspendTransaction {
@@ -88,21 +88,21 @@ class PostgresLoanRepository(
     override suspend fun returnBook(loanId: Int): Loan? = suspendTransaction {
         LoanDAO.findByIdAndUpdate(loanId) {
             it.returnDate = Instant.now()
-        }?.daoToModel()?.also {
-            loanActivityRepository.createLoanActivity(
-                activityType = ActivityType.LOAN_RETURNED,
-                loanId = it.id
-            )
-        }
+        }?.daoToModel()
+    }?.also {
+        loanActivityRepository.createLoanActivity(
+            activity = Activity.LOAN_RETURNED,
+            loanId = it.id
+        )
     }
 
     override suspend fun extendLoan(loanId: Int): Loan? = suspendTransaction {
         LoanDAO.findByIdAndUpdate(loanId) { it.duration += 15 }
-            ?.daoToModel()?.also {
-                loanActivityRepository.createLoanActivity(
-                    activityType = ActivityType.LOAN_EXTENDED,
-                    loanId = it.id
-                )
-            }
+            ?.daoToModel()
+    }?.also {
+        loanActivityRepository.createLoanActivity(
+            activity = Activity.LOAN_EXTENDED,
+            loanId = it.id
+        )
     }
 }
