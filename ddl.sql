@@ -31,14 +31,14 @@ CREATE TABLE loan
     return_date TIMESTAMP WITHOUT TIME ZONE          DEFAULT NULL
 );
 
-CREATE TYPE "ACTIVITY_TYPE" AS ENUM ('LOAN_CREATED', 'LOAN_EXTENDED', 'LOAN_RETURNED');
+CREATE TYPE ACTIVITY AS ENUM ('LOAN_CREATED', 'LOAN_EXTENDED', 'LOAN_RETURNED');
 
 CREATE TABLE loan_activity
 (
-    id            SERIAL PRIMARY KEY NOT NULL,
-    loan_id       INT                NOT NULL REFERENCES loan (id),
-    activity_type "ACTIVITY_TYPE"      NOT NULL,
-    created_at    TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+    id         SERIAL PRIMARY KEY NOT NULL,
+    loan_id    INT                NOT NULL REFERENCES loan (id),
+    activity   ACTIVITY           NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
 -- Password: Aa12345678.

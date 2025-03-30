@@ -1307,7 +1307,7 @@ components:
           format: "int32"
         loan:
           $ref: "#/components/schemas/Loan"
-        activity_type:
+        activity:
           type: "string"
           enum:
             - "LOAN_CREATED"
@@ -1319,7 +1319,7 @@ components:
       required:
         - "id"
         - "loan"
-        - "activity_type"
+        - "activity"
         - "created_at"
   securitySchemes:
     bearerAuth: # arbitrary name for the security scheme

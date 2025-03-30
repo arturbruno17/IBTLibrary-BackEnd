@@ -7,9 +7,9 @@ import org.jetbrains.exposed.sql.insert
 import java.time.Instant
 
 class PostgresLoanActivityRepository : LoanActivityRepository {
-    override suspend fun createLoanActivity(activityType: ActivityType, loanId: Int): Unit = suspendTransaction {
+    override suspend fun createLoanActivity(activity: Activity, loanId: Int): Unit = suspendTransaction {
         LoanActivityTable.insert {
-            it[this.activityType] = activityType
+            it[this.activity] = activity
             it[this.loan] = loanId
         }
     }
