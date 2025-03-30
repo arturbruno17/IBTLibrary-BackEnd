@@ -98,5 +98,12 @@ fun Application.configureStatusPages() {
                 BadRequestResponse(listOf(cause.message))
             )
         }
+
+        exception<InvalidDateException> { call, cause ->
+            call.respond(
+                HttpStatusCode.BadRequest,
+                BadRequestResponse(listOf(cause.message))
+            )
+        }
     }
 }

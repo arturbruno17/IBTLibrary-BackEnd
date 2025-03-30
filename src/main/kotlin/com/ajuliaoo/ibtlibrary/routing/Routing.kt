@@ -4,8 +4,10 @@ import com.ajuliaoo.ibtlibrary.routing.auth.authRouting
 import com.ajuliaoo.ibtlibrary.routing.books.booksRouting
 import com.ajuliaoo.ibtlibrary.repositories.books.BooksRepository
 import com.ajuliaoo.ibtlibrary.repositories.loan.LoanRepository
+import com.ajuliaoo.ibtlibrary.repositories.loanactivity.LoanActivityRepository
 import com.ajuliaoo.ibtlibrary.repositories.people.PeopleRepository
 import com.ajuliaoo.ibtlibrary.routing.loan.loanRouting
+import com.ajuliaoo.ibtlibrary.routing.loanactivity.loanActivityRouting
 import com.ajuliaoo.ibtlibrary.routing.people.peopleRouting
 import com.ajuliaoo.ibtlibrary.routing.summary.summaryRouting
 import com.ajuliaoo.ibtlibrary.security.hashing.HashingService
@@ -19,6 +21,7 @@ fun Application.configureRouting(
     peopleRepository: PeopleRepository,
     booksRepository: BooksRepository,
     loanRepository: LoanRepository,
+    loanActivityRepository: LoanActivityRepository,
     tokenService: JwtTokenService
 ) {
     routing {
@@ -42,6 +45,7 @@ fun Application.configureRouting(
             peopleRepository = peopleRepository,
             loanRepository = loanRepository
         )
+        loanActivityRouting(loanActivityRepository = loanActivityRepository)
         swaggerUI(path = "/swagger")
     }
 }

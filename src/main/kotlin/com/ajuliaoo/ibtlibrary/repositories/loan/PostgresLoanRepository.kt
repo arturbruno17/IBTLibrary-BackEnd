@@ -1,10 +1,9 @@
 package com.ajuliaoo.ibtlibrary.repositories.loan
 
 import com.ajuliaoo.ibtlibrary.database.sumDays
-import com.ajuliaoo.ibtlibrary.models.Loan
-import com.ajuliaoo.ibtlibrary.models.LoanDAO
-import com.ajuliaoo.ibtlibrary.models.LoanTable
-import com.ajuliaoo.ibtlibrary.models.daoToModel
+import com.ajuliaoo.ibtlibrary.models.*
+import com.ajuliaoo.ibtlibrary.repositories.loanactivity.LoanActivityRepository
+import com.ajuliaoo.ibtlibrary.repositories.loanactivity.PostgresLoanActivityRepository
 import com.ajuliaoo.ibtlibrary.repositories.suspendTransaction
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.greater
@@ -17,7 +16,9 @@ import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.or
 import java.time.Instant
 
-class PostgresLoanRepository : LoanRepository {
+class PostgresLoanRepository(
+    private val loanActivityRepository: LoanActivityRepository = PostgresLoanActivityRepository()
+) : LoanRepository {
     private fun isOverdue(): Op<Boolean> =
         LoanTable.returnDate.isNull() and
                 (CurrentTimestamp greater (LoanTable.startDate sumDays LoanTable.duration))
@@ -72,7 +73,12 @@ class PostgresLoanRepository : LoanRepository {
             it[book] = bookId
             it[person] = personId
         }
-        LoanDAO.findById(statement)!!.daoToModel()
+        LoanDAO.findById(statement)!!.daoToModel().also {
+            loanActivityRepository.createLoanActivity(
+                activityType = ActivityType.LOAN_CREATED,
+                loanId = it.id
+            )
+        }
     }
 
     override suspend fun activeLoansByBookId(bookId: Int): List<Loan> = suspendTransaction {
@@ -82,11 +88,21 @@ class PostgresLoanRepository : LoanRepository {
     override suspend fun returnBook(loanId: Int): Loan? = suspendTransaction {
         LoanDAO.findByIdAndUpdate(loanId) {
             it.returnDate = Instant.now()
-        }?.daoToModel()
+        }?.daoToModel()?.also {
+            loanActivityRepository.createLoanActivity(
+                activityType = ActivityType.LOAN_RETURNED,
+                loanId = it.id
+            )
+        }
     }
 
     override suspend fun extendLoan(loanId: Int): Loan? = suspendTransaction {
         LoanDAO.findByIdAndUpdate(loanId) { it.duration += 15 }
-            ?.daoToModel()
+            ?.daoToModel()?.also {
+                loanActivityRepository.createLoanActivity(
+                    activityType = ActivityType.LOAN_EXTENDED,
+                    loanId = it.id
+                )
+            }
     }
 }

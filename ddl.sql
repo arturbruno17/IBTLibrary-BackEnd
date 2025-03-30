@@ -23,18 +23,37 @@ CREATE TABLE people
 
 CREATE TABLE loan
 (
-    id          SERIAL PRIMARY KEY NOT NULL,
-    people_id   INT                NOT NULL REFERENCES people (id),
-    book_id     INT                NOT NULL REFERENCES books (id),
-    start_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
-    duration    INT                NOT NULL DEFAULT 15,
-    return_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL
+    id          SERIAL PRIMARY KEY          NOT NULL,
+    people_id   INT                         NOT NULL REFERENCES people (id),
+    book_id     INT                         NOT NULL REFERENCES books (id),
+    start_date  TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    duration    INT                         NOT NULL DEFAULT 15,
+    return_date TIMESTAMP WITHOUT TIME ZONE          DEFAULT NULL
+);
+
+CREATE TYPE "ACTIVITY_TYPE" AS ENUM ('LOAN_CREATED', 'LOAN_EXTENDED', 'LOAN_RETURNED');
+
+CREATE TABLE loan_activity
+(
+    id            SERIAL PRIMARY KEY NOT NULL,
+    loan_id       INT                NOT NULL REFERENCES loan (id),
+    activity_type "ACTIVITY_TYPE"      NOT NULL,
+    created_at    TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
 -- Password: Aa12345678.
-INSERT INTO people (name, role, email, salt, hash_password) VALUES ('Jhon Doe Reader', 'READER', 'reader@gmail.com', 'c84a930e3c8ab594f67ea1a9c10863e93878c01766cc2423fa3d220b75383c16', '2925e50ea909e5d57ed9ec97f138dc3ba517dc86b9256cf94da8a28cce08bedf');
-INSERT INTO people (name, role, email, salt, hash_password) VALUES ('Jhon Doe Admin', 'ADMIN', 'admin@gmail.com', '1ddd2c7d05f2ceac8c05c793282ef346cec9be096f9acafacdcf561f92d85f6f', '74eb42ebb322bd7199b3bb03df21f1eec130bdb59fdfd0572b703b001249ebda');
-INSERT INTO people (name, role, email, salt, hash_password) VALUES ('Jhon Doe Librarian', 'LIBRARIAN', 'librarian@gmail.com', 'baddcdebab328efcb6c5be0fd91284e179e1851077b027259d45181501b9f077', '2ee3b59ab7ddaa1fc5e1959ca599e5868cb0e6ddd32f066bbf5fdb03a41fee1a');
+INSERT INTO people (name, role, email, salt, hash_password)
+VALUES ('Jhon Doe Reader', 'READER', 'reader@gmail.com',
+        'c84a930e3c8ab594f67ea1a9c10863e93878c01766cc2423fa3d220b75383c16',
+        '2925e50ea909e5d57ed9ec97f138dc3ba517dc86b9256cf94da8a28cce08bedf');
+INSERT INTO people (name, role, email, salt, hash_password)
+VALUES ('Jhon Doe Admin', 'ADMIN', 'admin@gmail.com',
+        '1ddd2c7d05f2ceac8c05c793282ef346cec9be096f9acafacdcf561f92d85f6f',
+        '74eb42ebb322bd7199b3bb03df21f1eec130bdb59fdfd0572b703b001249ebda');
+INSERT INTO people (name, role, email, salt, hash_password)
+VALUES ('Jhon Doe Librarian', 'LIBRARIAN', 'librarian@gmail.com',
+        'baddcdebab328efcb6c5be0fd91284e179e1851077b027259d45181501b9f077',
+        '2ee3b59ab7ddaa1fc5e1959ca599e5868cb0e6ddd32f066bbf5fdb03a41fee1a');
 
 -- Fake ISBNs
 INSERT INTO books (isbn, title, author)
