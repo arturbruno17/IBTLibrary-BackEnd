@@ -93,6 +93,7 @@ private fun Route.loginRoute(
             TokenClaim("email", person.email),
             TokenClaim("role", person.role.name),
             TokenClaim("name", person.name),
+            TokenClaim("id", person.id.toString()),
 
         )
         call.respond(HttpStatusCode.OK, LoginResponse(accessToken, refreshToken))
