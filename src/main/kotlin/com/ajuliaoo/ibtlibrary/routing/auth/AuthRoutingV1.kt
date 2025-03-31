@@ -91,7 +91,9 @@ private fun Route.loginRoute(
         val (accessToken, refreshToken) = tokenService.generate(
             config = tokenConfig,
             TokenClaim("email", person.email),
-            TokenClaim("role", person.role.name)
+            TokenClaim("role", person.role.name),
+            TokenClaim("name", person.name),
+            TokenClaim("id", person.id.toString()),
         )
         call.respond(HttpStatusCode.OK, LoginResponse(accessToken, refreshToken))
     }
