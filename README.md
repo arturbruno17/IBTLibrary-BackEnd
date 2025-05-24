@@ -1,41 +1,28 @@
-# IBTLibrary
+# Biblioteca IBT
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
+Esse projeto tem como intuito fornecer um sistema capaz de controlar os empréstimos realizados na biblioteca da Igreja
+Batista Trindade.
 
-Here are some useful links to get you started:
+# Pré-requisito
 
-- [Ktor Documentation](https://ktor.io/docs/home.html)
-- [Ktor GitHub page](https://github.com/ktorio/ktor)
-- The [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). You'll need to [request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up) to join.
-
-## Features
-
-Here's a list of features included in this project:
-
-| Name                                                                   | Description                                                                        |
-| ------------------------------------------------------------------------|------------------------------------------------------------------------------------ |
-| [Routing](https://start.ktor.io/p/routing)                             | Provides a structured routing DSL                                                  |
-| [Content Negotiation](https://start.ktor.io/p/content-negotiation)     | Provides automatic content conversion according to Content-Type and Accept headers |
-| [kotlinx.serialization](https://start.ktor.io/p/kotlinx-serialization) | Handles JSON serialization using kotlinx.serialization library                     |
-
-## Building & Running
-
-To build or run the project, use one of the following tasks:
-
-| Task                          | Description                                                          |
-| -------------------------------|---------------------------------------------------------------------- |
-| `./gradlew test`              | Run the tests                                                        |
-| `./gradlew build`             | Build everything                                                     |
-| `buildFatJar`                 | Build an executable JAR of the server with all dependencies included |
-| `buildImage`                  | Build the docker image to use with the fat JAR                       |
-| `publishImageToLocalRegistry` | Publish the docker image locally                                     |
-| `run`                         | Run the server                                                       |
-| `runDocker`                   | Run using the local docker image                                     |
-
-If the server starts successfully, you'll see the following output:
-
-```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
+Como pré-requisito, você precisará de um banco com o DDL adequado para o projeto. Nesse caso, o
+arquivo [docker-compose.yml](./docker-compose.yml) contém essas instruções. Você pode mudar as variáveis de ambiente do
+contêiner caso ache necessário. Para subir o contêiner, rode o seguinte comando:
+```shell
+docker compose up -d
 ```
 
+
+# Configuração
+
+Para realizar a configuração do projeto, você precisará configurar apenas quatro variáveis de ambiente:
+
+- `DATABASE_URL`: A URL em formato JDBC do banco de dados do qual você deseja conectar
+- `DATABASE_USER`: O usuário do banco a qual você deseja conectar o sistema
+- `DATABASE_PASSWORD`: A senha do banco a qual você deseja conectar o sistema
+- `JWT_SECRET`: A secret responsável por codificar os tokens JWT
+
+Após a configuração das variáveis de ambiente, rode o seguinte comando:
+```shell
+./gradlew run
+```
