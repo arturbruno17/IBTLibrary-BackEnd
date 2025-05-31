@@ -28,3 +28,8 @@ Após a configuração das variáveis de ambiente, rode o seguinte comando:
 ```shell
 ./gradlew run
 ```
+
+# Documentação completa
+
+A documentação completa do projeto, incluindo o uso e as evidências de apresentação ao público-alvo estão no [repositório
+do front-end](https://github.com/arturbruno17/IBTLibrary-FrontEnd).
